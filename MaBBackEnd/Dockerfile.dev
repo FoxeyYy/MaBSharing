@@ -1,0 +1,36 @@
+#
+# Development version of the MaBSharing back end image.
+#
+
+FROM node:8
+
+MAINTAINER Raúl Fernández Álvarez <raul.fernandez@voxel3d.es>
+
+# Run the application as an unprivileged user
+RUN useradd --user-group --create-home --shell /bin/false mabsharing
+
+ENV HOME=/home/mabsharing
+
+# Install the dependencies by only copying now the packing files and
+# copying in the rest after we run npm install.
+#
+# This will save some time when building a image by taking better
+# advantage of docker build’s layer caching.
+COPY package.json package-lock.json $HOME/server/
+RUN chown -R mabsharing:mabsharing $HOME/server
+
+# Install the dependencies and remove the downloaded files, they won't
+# help if we rebuild the image, so they just take up space.
+USER mabsharing
+WORKDIR $HOME/server
+RUN npm install
+RUN npm cache clean --force
+
+# To deploy the application image to production, copy the application
+# folder into the container after the npm install, that way docker will
+# only rerun the npm install step if package.json or package-lock.json
+# have changed, not when we just change a source file.
+USER root
+COPY ["./src", "$HOME/server/src"]
+RUN find . -type d \( -path ./.git -o -path ./node_modules -o -path ./db \) -prune -o -exec chown mabsharing:mabsharing {} \;
+USER mabsharing

@@ -1,0 +1,33 @@
+#
+# Installation & freezing of dependencies for the development version of
+# the MaBSharing back end.
+#
+
+version: "3.2"
+
+services:
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: mabsharing-dev/backend
+    entrypoint: ["./node_modules/.bin/nodemon", "--watch", "./src", "--inspect=0.0.0.0:26018", "./src/index.js"]
+    environment:
+      - PORT=26017
+      - NODE_ENV=development
+      - SECRET=g7NCMb3UPYGs5zgxzaB45vy3fem4RRTXAxsXj5vXE2Zks7GQ8TvNdEsjJCYs5uef
+    networks:
+      - mabsharing_dev
+    ports:
+      - "10011:26017"
+      - "26018:26018"
+    volumes:
+      - .:/home/mabsharing/server
+      - mabsharing-dev_modules:/home/mabsharing/server/node_modules
+
+networks:
+  mabsharing_dev:
+
+volumes:
+  mabsharing-dev_modules:
+    driver: local
