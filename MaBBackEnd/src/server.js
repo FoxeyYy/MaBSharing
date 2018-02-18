@@ -5,6 +5,9 @@
  */
 
 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
@@ -191,7 +194,30 @@ const authRoutes = express.Router();
 
 
 /**
- * POST /authRoutes/signup
+ * FIX: used to test authentication routes until the DB is configured.
+ */
+const users = [];
+
+const signUpUser = (email, password) =>
+{
+    const hashedPassword = bcrypt.hashSync(password);
+    users.push({ email, password: hashedPassword });
+};
+
+
+const generateJWT = (email) =>
+{
+    return jwt.sign(
+        {
+            { email },
+            process.env.SECRET,
+            { expiresIn: 86400 },
+        });
+};
+
+
+/**
+ * POST {authRoutes}/signup
  *
  * Signs up a new user on the platform.
  */
@@ -201,14 +227,21 @@ authRoutes.post(
     {
         const email = request.body.email;
         const password = request.body.password;
-        const tiers = request.body.tiers ? JSON.parse(request.body.tiers) : {};
 
-        response.status(201).send({ token: 'token' });
+        if (password && users.every(user => user.email !== email))
+        {
+            signUpUser(email, password);
+            response.status(201).send({ token: generateJWT(email) });
+        }
+        else
+        {
+            response.status(400).send({ error: 'Provided email and password are invalid.' });
+        }
     });
 
 
 /**
- * POST /authRoutes/login
+ * POST {authRoutes}/login
  *
  * Logs in a user on the platform.
  */
@@ -223,22 +256,22 @@ authRoutes.post(
     });
 
 
-
-
-//   ad88888ba
-//  d8"     "8b ,d                            ,d
-//  Y8,         88                            88
-//  `Y8aaaaa, MM88MMM ,adPPYYba, 8b,dPPYba, MM88MMM    88       88 8b,dPPYba,
-//    `"""""8b, 88    ""     `Y8 88P'   "Y8   88       88       88 88P'    "8a
-//          `8b 88    ,adPPPPP88 88           88       88       88 88       d8
-//  Y8a     a8P 88,   88,    ,88 88           88,      "8a,   ,a88 88b,   ,a8"
-//   "Y88888P"  "Y888 `"8bbdP"Y8 88           "Y888     `"YbbdP'Y8 88`YbbdP"'
-//                                                                 88
-//                                                                 88
-
-
-// Add the routes to the Express application.
+// Add the authentication routes to the Express application.
 app.use('/auth', authRoutes);
+
+
+
+
+//  88888888888
+//  88                                                                ,d
+//  88                                                                88
+//  88aaaaa      8b,     ,d8  8b,dPPYba,    ,adPPYba,   8b,dPPYba,  MM88MMM
+//  88"""""       `Y8, ,8P'   88P'    "8a  a8"     "8a  88P'   "Y8    88
+//  88              )888(     88       d8  8b       d8  88            88
+//  88            ,d8" "8b,   88b,   ,a8"  "8a,   ,a8"  88            88,
+//  88888888888  8P'     `Y8  88`YbbdP"'    `"YbbdP"'   88            "Y888
+//                            88
+//                            88
 
 
 module.exports =
