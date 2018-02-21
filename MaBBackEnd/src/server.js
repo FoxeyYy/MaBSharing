@@ -208,11 +208,9 @@ const signUpUser = (email, password) =>
 const generateJWT = (email) =>
 {
     return jwt.sign(
-        {
-            { email },
-            process.env.SECRET,
-            { expiresIn: 86400 },
-        });
+        { email: email },
+        process.env.SECRET,
+        { expiresIn: 86400 });
 };
 
 
@@ -252,7 +250,16 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        response.status(200).send({ token: 'token' });
+        const user = users.filter(registeredUser => registeredUser.email === email)[0];
+
+        if (bcrypt.compare(password, user.password))
+        {
+            response.status(200).send({ token: generateJWT(email) });
+        }
+        else
+        {
+            response.status(400).send({ error: 'Invalid user.'});
+        }
     });
 
 
