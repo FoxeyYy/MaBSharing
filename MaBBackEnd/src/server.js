@@ -228,15 +228,6 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        // if (password && users.every(user => user.email !== email))
-        // {
-        //     signUpUser(email, password);
-        //     response.status(201).send({ token: generateJWT(email) });
-        // }
-        // else
-        // {
-        //     response.status(400).send({ error: 'Provided email and password are invalid.' });
-        // }
         signUpUser(email, password).
             then(
                 () =>
@@ -263,16 +254,21 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        const user = db.fetchUser(email);
+        // const user = db.fetchUser(email);
 
-        if (bcrypt.compare(password, user.password))
-        {
-            response.status(200).send({ token: generateJWT(email) });
-        }
-        else
-        {
-            response.status(400).send({ error: 'Invalid user.'});
-        }
+        // if (bcrypt.compare(password, user.password))
+        // {
+        //     response.status(200).send({ token: generateJWT(email) });
+        // }
+        // else
+        // {
+        //     response.status(400).send({ error: 'Invalid user.'});
+        // }
+
+        db.fetchUser(email).
+            then(user => bcrypt.compare(password, user.password)).
+            then(() => response.status(200).send({ token: generateJWT(email) })).
+            catch(() => response.status(400).send({ error: 'Invalid credentials.'}));
     });
 
 

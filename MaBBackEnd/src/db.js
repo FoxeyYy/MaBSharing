@@ -54,7 +54,15 @@ const db =
  */
 const fetchUser = (email) =>
 {
-    return users.filter(registeredUser => registeredUser.email === email)[0];
+    return db.
+        select('email', 'password').
+        from('user').
+        where({ email }).
+        then(
+            rows =>
+            {
+                return rows[0];
+            })
 };
 
 
