@@ -14,6 +14,8 @@ const express = require('express');
 const expressWinston = require('express-winston');
 const winston = require('winston');
 
+const db = require('./db');
+
 const IN_DEVELOPMENT = (process.env.NODE_ENV === 'development');
 
 
@@ -193,15 +195,15 @@ app.get(
 const authRoutes = express.Router();
 
 
-/**
- * FIX: used to test authentication routes until the DB is configured.
- */
-const users = [];
-
 const signUpUser = (email, password) =>
 {
-    const hashedPassword = bcrypt.hashSync(password);
-    users.push({ email, password: hashedPassword });
+    return new Promise(
+        (resolve, reject) =>
+        {
+            password ?
+                resolve(db.insertUser(email, bcrypt.hashSync(password))) :
+                reject('Empty password');
+        });
 };
 
 
@@ -226,15 +228,26 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        if (password && users.every(user => user.email !== email))
-        {
-            signUpUser(email, password);
-            response.status(201).send({ token: generateJWT(email) });
-        }
-        else
-        {
-            response.status(400).send({ error: 'Provided email and password are invalid.' });
-        }
+        // if (password && users.every(user => user.email !== email))
+        // {
+        //     signUpUser(email, password);
+        //     response.status(201).send({ token: generateJWT(email) });
+        // }
+        // else
+        // {
+        //     response.status(400).send({ error: 'Provided email and password are invalid.' });
+        // }
+        signUpUser(email, password).
+            then(
+                () =>
+                {
+                    response.status(201).send({ token: generateJWT(email) });
+                }).
+            catch(
+                error =>
+                {
+                    response.status(400).send({ error: 'Provided email and password are invalid.' });
+                });
     });
 
 
@@ -250,7 +263,7 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        const user = users.filter(registeredUser => registeredUser.email === email)[0];
+        const user = db.fetchUser(email);
 
         if (bcrypt.compare(password, user.password))
         {
