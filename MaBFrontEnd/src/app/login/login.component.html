@@ -1,0 +1,9 @@
+<div name="login-box"   
+  [class.error]="error_msg">
+  <form action="/action_page.php">
+    <label>Username:</label> <input [(ngModel)]="username" type="text" name="name"><br>
+    <label>Password:</label> <input [(ngModel)]="password" type="password" name="password"><br>
+    <input type="submit" value="Clear" (click)=clear()>
+    <input type="submit" value="Login" (click)=login()>
+  </form>
+</div>
