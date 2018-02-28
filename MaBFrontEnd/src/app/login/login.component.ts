@@ -10,10 +10,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  username: string = "";
-  password: string = "";
-  error_msg: string;
+  username: string;
+  password: string;
+  errMsg: string;
   returnUrl: string;
+  loading: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,15 +26,15 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  clear () {
-    this.username = "";
-    this.password = "";
-  }
-
   login () {
+    this.errMsg = '';
+
     if (this.username && this.password) {
+      this.loading = true;
       this.authService.login(this.username, this.password);
       this.router.navigate([this.returnUrl]);
+    } else {
+      this.errMsg = 'Both fields are mandatory';
     }
   }
 
