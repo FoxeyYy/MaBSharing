@@ -1,49 +1,59 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import * as moment from 'moment';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-
+import { of } from 'rxjs/observable/of';
+import { JwtHelper } from 'angular2-jwt';
 
 export const TOKEN_NAME: string = 'jwt_token';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private http: HttpClient) {
+    private authUrl = 'http://localhost:10011/auth';
+    private jwtHelper: JwtHelper = new JwtHelper();
 
-  }
+    constructor(private http: HttpClient) {
 
-  login(user:string, password:string ) {
-      return this.http.post('/api/login', {user, password})
-        .subscribe(
-          token => this.setSession(token),
-          error => console.error("Failed to login")
-        );
-  }     
-  private setSession(authResult) {
-      const expiresAt = moment().add(authResult.expiresIn, 'second');
+    }
 
-      localStorage.setItem('id_token', authResult.idToken);
-      localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()) );
-  }          
+    signup(user: string, password: string) {
+        return this.http.post(`${this.authUrl}/signup`, { email: user, password: password })
+            .pipe(
+                tap(jwt => this.setSession(jwt)),
+                catchError(err => {
+                    console.log(err);
+                    return of("error");
+                })
+            );
+    }
 
-  logout() {
-      localStorage.removeItem("id_token");
-      localStorage.removeItem("expires_at");
-  }
+    login(user: string, password: string) {
+        return this.http.post(`${this.authUrl}/login`, { email: user, password: password })
+            .pipe(
+                tap(jwt => this.setSession(jwt)),
+                catchError(error => {
+                    console.log(error);
+                    return of("error");
+                })
+            );
+    }
 
-  public isLoggedIn() {
-      return moment().isBefore(this.getExpiration());
-  }
+    private setSession(authResult) {
+        localStorage.setItem(TOKEN_NAME, JSON.stringify(authResult));
+    }
 
-  isLoggedOut() {
-      return !this.isLoggedIn();
-  }
+    logout() {
+        localStorage.removeItem(TOKEN_NAME);
+    }
 
-  getExpiration() {
-      const expiration = localStorage.getItem('expires_at');
-      const expiresAt = JSON.parse(expiration);
-      return moment(expiresAt);
-  }    
+    public isLoggedIn() {
+        const token = localStorage.getItem(TOKEN_NAME);
+        return this.jwtHelper.isTokenExpired(token);
+    }
+
+    isLoggedOut() {
+        return !this.isLoggedIn();
+    }
+
 }
