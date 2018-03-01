@@ -195,6 +195,13 @@ app.get(
 const authRoutes = express.Router();
 
 
+/**
+ * Registers  a user on the platform.
+ *
+ * @param {string} email
+ * @param {string} password Plain-text password
+ * @returns {Promise} Resolves on successful registration.
+ */
 const signUpUser = (email, password) =>
 {
     return new Promise(
@@ -207,6 +214,12 @@ const signUpUser = (email, password) =>
 };
 
 
+/**
+ * Generates a JSON Web Token (JWT).
+ *
+ * @param {string} email Email of a user which will be identified by the JWT.
+ * @returns {string} JWT authenticating the user with the given email.
+ */
 const generateJWT = (email) =>
 {
     return jwt.sign(
@@ -229,16 +242,8 @@ authRoutes.post(
         const password = request.body.password;
 
         signUpUser(email, password).
-            then(
-                () =>
-                {
-                    response.status(201).send({ token: generateJWT(email) });
-                }).
-            catch(
-                error =>
-                {
-                    response.status(400).send({ error: 'Provided email and password are invalid.' });
-                });
+            then(() => response.status(201).send({ token: generateJWT(email) })).
+            catch(() => response.status(400).send({ error: 'Provided email and password are invalid.' }));
     });
 
 
@@ -254,17 +259,6 @@ authRoutes.post(
         const email = request.body.email;
         const password = request.body.password;
 
-        // const user = db.fetchUser(email);
-
-        // if (bcrypt.compare(password, user.password))
-        // {
-        //     response.status(200).send({ token: generateJWT(email) });
-        // }
-        // else
-        // {
-        //     response.status(400).send({ error: 'Invalid user.'});
-        // }
-
         db.fetchUser(email).
             then(user => bcrypt.compare(password, user.password)).
             then(() => response.status(200).send({ token: generateJWT(email) })).
@@ -274,6 +268,31 @@ authRoutes.post(
 
 // Add the authentication routes to the Express application.
 app.use('/auth', authRoutes);
+
+
+
+
+//  88        88
+//  88        88
+//  88        88
+//  88        88  ,adPPYba,   ,adPPYba,  8b,dPPYba,
+//  88        88  I8[    ""  a8P_____88  88P'   "Y8
+//  88        88   `"Y8ba,   8PP"""""""  88
+//  Y8a.    .a8P  aa    ]8I  "8b,   ,aa  88
+//   `"Y8888Y"'   `"YbbdP"'   `"Ybbd8"'  88
+//
+//
+//
+//  88888888ba
+//  88      "8b                             ,d
+//  88      ,8P                             88
+//  88aaaaaa8P'  ,adPPYba,   88       88  MM88MMM  ,adPPYba,  ,adPPYba,
+//  88""""88'   a8"     "8a  88       88    88    a8P_____88  I8[    ""
+//  88    `8b   8b       d8  88       88    88    8PP"""""""   `"Y8ba,
+//  88     `8b  "8a,   ,a8"  "8a,   ,a88    88,   "8b,   ,aa  aa    ]8I
+//  88      `8b  `"YbbdP"'    `"YbbdP'Y8    "Y888  `"Ybbd8"'  `"YbbdP"'
+
+
 
 
 

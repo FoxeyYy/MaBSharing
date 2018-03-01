@@ -23,7 +23,6 @@ const knex = require('knex');
 const db =
     knex(
         {
-            // client: "mariadb",
             client: "mariasql",
             connection:
             {
