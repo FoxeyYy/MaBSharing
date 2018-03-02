@@ -49,7 +49,7 @@ export class AuthService {
 
     public isLoggedIn() {
         const token = localStorage.getItem(TOKEN_NAME);
-        return this.jwtHelper.isTokenExpired(token);
+        return token && !this.jwtHelper.isTokenExpired(token);
     }
 
     isLoggedOut() {
