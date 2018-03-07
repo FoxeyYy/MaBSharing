@@ -459,7 +459,9 @@ resourceRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchBookById(request.params.id).
+            then((book) => response.status(200).send({ book })).
+            catch((error) => response.status(500).end());
     });
 
 

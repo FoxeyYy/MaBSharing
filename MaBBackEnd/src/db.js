@@ -111,7 +111,27 @@ const insertUser = (email, password) =>
  */
 const fetchBookById = (id) =>
 {
-    return null;
+    return db.
+        from('resources').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        then(
+            (rows) =>
+            {
+                if (rows.length == 0)
+                {
+                    throw new Error('Invalid credentials.');
+                }
+                else
+                {
+                    return (
+                        {
+                            name: rows[0].name,
+                            release_date: rows[0].releaseDate,
+                            edition: rows[0].edition,
+                            writer: rows[0].writer,
+                        });
+                }
+            })
 };
 
 
