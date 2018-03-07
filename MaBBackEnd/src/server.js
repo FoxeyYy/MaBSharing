@@ -293,6 +293,289 @@ app.use('/auth', authRoutes);
 //  88      `8b  `"YbbdP"'    `"YbbdP'Y8    "Y888  `"Ybbd8"'  `"YbbdP"'
 
 
+/**
+ * Group all user routes under the same router.
+ *
+ * @const
+ * @type {express.Router}
+ *
+ * @see {@link http://expressjs.com/en/4x/api.html#router}
+ */
+const userRoutes = express.Router();
+
+
+/**
+ * GET {userRoutes}/events
+ *
+ * Returns the events related to the user identified by the JWT sent in
+ * the request.
+ */
+userRoutes.get(
+    '/events',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * GET {userRoutes}/friendship_requests
+ *
+ * Returns the pending friendship requests of the user identified by the
+ * JWT sent in the request.
+ */
+userRoutes.get(
+    '/friendship_requests',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {userRoutes}/friendship_requests
+ *
+ * Adds a new friendship requests from the user identified by the JWT
+ * sent in the request.
+ */
+userRoutes.post(
+    '/friendship_requests',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * PATCH {userRoutes}/friendship_requests/:request
+ *
+ * Accepts/Denies a friendship requests directed towards the user
+ * identified by the JWT sent in the request.
+ */
+userRoutes.patch(
+    '/friendship_requests/:request',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {userRoutes}/search
+ *
+ * Searches all matching users given a search term.
+ */
+userRoutes.post(
+    '/search',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    })
+
+
+/**
+ * GET {userRoutes}/wishlist
+ *
+ * Returns the wish list of the user identified by the JWT sent in the
+ * request.
+ */
+userRoutes.get(
+    '/wishlist',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {userRoutes}/wishlist/:resource
+ *
+ * Adds a new resource to the wish list of the user identified by the
+ * JWT sent in the request.
+ */
+userRoutes.post(
+    '/wishlist',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+// Add the user routes to the Express application.
+app.use('/user', userRoutes);
+
+
+
+
+//  88888888ba
+//  88      "8b
+//  88      ,8P
+//  88aaaaaa8P'  ,adPPYba,  ,adPPYba,   ,adPPYba,   88       88  8b,dPPYba,   ,adPPYba,   ,adPPYba,
+//  88""""88'   a8P_____88  I8[    ""  a8"     "8a  88       88  88P'   "Y8  a8"     ""  a8P_____88
+//  88    `8b   8PP"""""""   `"Y8ba,   8b       d8  88       88  88          8b          8PP"""""""
+//  88     `8b  "8b,   ,aa  aa    ]8I  "8a,   ,a8"  "8a,   ,a88  88          "8a,   ,aa  "8b,   ,aa
+//  88      `8b  `"Ybbd8"'  `"YbbdP"'   `"YbbdP"'    `"YbbdP'Y8  88           `"Ybbd8"'   `"Ybbd8"'
+//
+//
+//
+//  88888888ba
+//  88      "8b                             ,d
+//  88      ,8P                             88
+//  88aaaaaa8P'  ,adPPYba,   88       88  MM88MMM  ,adPPYba,  ,adPPYba,
+//  88""""88'   a8"     "8a  88       88    88    a8P_____88  I8[    ""
+//  88    `8b   8b       d8  88       88    88    8PP"""""""   `"Y8ba,
+//  88     `8b  "8a,   ,a8"  "8a,   ,a88    88,   "8b,   ,aa  aa    ]8I
+//  88      `8b  `"YbbdP"'    `"YbbdP'Y8    "Y888  `"Ybbd8"'  `"YbbdP"'
+
+
+
+/**
+ * Group all resource routes under the same router.
+ *
+ * @const
+ * @type {express.Router}
+ *
+ * @see {@link http://expressjs.com/en/4x/api.html#router}
+ */
+const resourceRoutes = express.Router();
+
+
+
+/**
+ * GET {resourceRoutes}/book/:id
+ *
+ * Returns the information about a book.
+ */
+resourceRoutes.get(
+    '/book/:id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {resourceRoutes}/book
+ *
+ * Adds a new book to the platform.
+ */
+resourceRoutes.post(
+    '/book',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * GET {resourceRoutes}/movie/:id
+ *
+ * Returns the information about a movie.
+ */
+resourceRoutes.get(
+    '/movie/:id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {resourceRoutes}/movie
+ *
+ * Adds a new movie to the platform.
+ */
+resourceRoutes.post(
+    '/movie',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * GET {resourceRoutes}/:resource/comments
+ *
+ * Returns the a new comment to the given resource.
+ */
+resourceRoutes.get(
+    '/:resource/comments',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {resourceRoutes}/:resource/comments
+ *
+ * Adds a new comment to the given resource.
+ */
+resourceRoutes.post(
+    '/:resource/comments',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * GET {resourceRoutes}/:resource/ratings
+ *
+ * Returns the a new rating to the given resource.
+ */
+resourceRoutes.get(
+    '/:resource/ratings',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {resourceRoutes}/:resource/ratings
+ *
+ * Adds a new rating to the given resource.
+ */
+resourceRoutes.post(
+    '/:resource/ratings',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+/**
+ * POST {resourceRoutes}/search
+ *
+ * Searches all matching resources given a search term.
+ */
+resourceRoutes.post(
+    '/search',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        response.status(501).end();
+    });
+
+
+// Add the resource routes to the Express application.
+app.use('/resource', resourceRoutes);
 
 
 
