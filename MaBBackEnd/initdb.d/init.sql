@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS resources (
   INDEX author_ind (author_id),
   FOREIGN KEY (author_id)
     REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB
+) ENGINE=INNODB;
 
 /* Book table */
 CREATE TABLE IF NOT EXISTS book (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS book (
   PRIMARY KEY(id),
   INDEX resource_ind (resource_id),
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB
+) ENGINE=INNODB;
 
 /* Movie table */
 CREATE TABLE IF NOT EXISTS movie (

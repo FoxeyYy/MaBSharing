@@ -54,7 +54,7 @@ const db =
 const fetchUser = (email) =>
 {
     return db.
-        select('email', 'password').
+        select('id', 'email', 'password').
         from('user').
         where({ email }).
         then(
@@ -115,16 +115,45 @@ const fetchBookById = (id) =>
  *
  *   - name
  *   - releaseDate
- *   - user
+ *   - userEmail
  *   - writer
  *   - edition
  *
  * @param {object} book
  * @returns {number} Identifier of the new book on the database.
  */
-const insertBook = ({ name, releaseDate, user, writer, edition }) =>
+const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
 {
-    return null;
+    return fetchUser(userEmail).
+        then(
+            (user) =>
+            {
+                return db.transaction(
+                    (trx) =>
+                    {
+                        return trx.
+                            insert(
+                                {
+                                    name,
+                                    creationDate: new Date().toISOString().split('T')[0],
+                                    releaseDate,
+                                    author_id: user.id,
+                                }).
+                            into('resources').
+                            then(
+                                (ids) =>
+                                {
+                                    return trx.
+                                        insert(
+                                            {
+                                                edition,
+                                                writer,
+                                                resource_id: ids[0],
+                                            }).
+                                        into('book');
+                                });
+                    });
+            });
 };
 
 
@@ -175,4 +204,7 @@ const insertMovie = ({ name, releaseDate, user, director }) =>
 module.exports = {
     insertUser,
     fetchUser,
+
+    insertBook,
+    fetchBookById,
 };

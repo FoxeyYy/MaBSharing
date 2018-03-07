@@ -112,7 +112,8 @@ const ensureAuthenticated = function (request, response, next)
     {
         try
         {
-            // TODO: Validate token.
+            const payload = jwt.verify(token, process.env.SECRET);
+            request.body.user_email = payload.email;
             next();
         }
         catch (error)
@@ -472,7 +473,18 @@ resourceRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        const book =
+        {
+            name: request.body.name,
+            releaseDate: request.body.release_date,
+            userEmail: request.body.user_email,
+            writer: request.body.writer,
+            edition: request.body.edition,
+        };
+
+        db.insertBook(book).
+            then(() => response.status(201).end()).
+            catch((error) => response.status(500).end());
     });
 
 
@@ -575,7 +587,7 @@ resourceRoutes.post(
 
 
 // Add the resource routes to the Express application.
-app.use('/resource', resourceRoutes);
+app.use('/resources', resourceRoutes);
 
 
 
