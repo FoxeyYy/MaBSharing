@@ -88,7 +88,7 @@ const jwtTokenIn = function (request)
 {
     if (request.header('Authorization'))
     {
-        return request.header('Authorization').split(' ')[1];
+        return request.header('Authorization');
     }
     else
     {
