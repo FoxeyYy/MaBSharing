@@ -152,7 +152,12 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                                             }).
                                         into('book');
                                 });
-                    });
+                    }).
+                    then(
+                        (inserts) =>
+                        {
+                            return inserts[0][0];
+                        });
             });
 };
 

@@ -483,7 +483,7 @@ resourceRoutes.post(
         };
 
         db.insertBook(book).
-            then(() => response.status(201).end()).
+            then((id) => response.status(201).send({ id })).
             catch((error) => response.status(500).end());
     });
 
