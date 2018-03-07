@@ -49,7 +49,7 @@ const db =
  * Fetches a user from the database given its email address.
  *
  * @param {string} email
- * @returns { { email: string, password: string } }
+ * @returns { { id: number, email: string, password: string } }
  */
 const fetchUser = (email) =>
 {
@@ -70,6 +70,7 @@ const fetchUser = (email) =>
  *
  * @param {string} email
  * @param {string} password
+ * @returns {string} Identifier of the new user on the database.
  */
 const insertUser = (email, password) =>
 {
@@ -81,6 +82,82 @@ const insertUser = (email, password) =>
                 creationDate: new Date().toISOString().split('T')[0]
             });
 };
+
+
+
+
+//  88888888ba
+//  88      "8b
+//  88      ,8P
+//  88aaaaaa8P'  ,adPPYba,  ,adPPYba,   ,adPPYba,   88       88  8b,dPPYba,   ,adPPYba,   ,adPPYba,  ,adPPYba,
+//  88""""88'   a8P_____88  I8[    ""  a8"     "8a  88       88  88P'   "Y8  a8"     ""  a8P_____88  I8[    ""
+//  88    `8b   8PP"""""""   `"Y8ba,   8b       d8  88       88  88          8b          8PP"""""""   `"Y8ba,
+//  88     `8b  "8b,   ,aa  aa    ]8I  "8a,   ,a8"  "8a,   ,a88  88          "8a,   ,aa  "8b,   ,aa  aa    ]8I
+//  88      `8b  `"Ybbd8"'  `"YbbdP"'   `"YbbdP"'    `"YbbdP'Y8  88           `"Ybbd8"'   `"Ybbd8"'  `"YbbdP"'
+
+
+/**
+ * Fetches a book from the database given its id.
+ *
+ * @param {number} id
+ * @returns {object} Matching book.
+ */
+const fetchBookById = (id) =>
+{
+    return null;
+};
+
+
+/**
+ * Inserts a new book on the database.
+ *
+ * The fields needed to create a new book are:
+ *
+ *   - name
+ *   - releaseDate
+ *   - user
+ *   - writer
+ *   - edition
+ *
+ * @param {object} book
+ * @returns {number} Identifier of the new book on the database.
+ */
+const insertBook = ({ name, releaseDate, user, writer, edition }) =>
+{
+    return null;
+};
+
+
+/**
+ * Fetches a book from the database given its id.
+ *
+ * @param {number} id
+ * @returns {object} Matching movie.
+ */
+const fetchMovieById = (id) =>
+{
+    return null;
+};
+
+
+/**
+ * Inserts a new movie on the database.
+ *
+ * The fields needed to create a new movie are:
+ *
+ *   - name
+ *   - releaseDate
+ *   - user
+ *   - director
+ *
+ * @param {object} movie
+ * @returns {number} Identifier of the new movie on the database.
+ */
+const insertMovie = ({ name, releaseDate, user, director }) =>
+{
+    return null;
+};
+
 
 
 
