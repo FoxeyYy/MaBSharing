@@ -1,14 +1,14 @@
-INSERT INTO user (email, password, creationDate) 
-VALUES 
-    ('hector', 'asd', '2018-03-07'),
-    ('raul', 'asd', '2018-03-07'),
-    ('javier', 'asd', '2018-03-07'),
-    ('cesar', 'asd', '2018-03-07'),
-    ('senmao', 'asd', '2018-03-07'),
-    ('michal', 'asd', '2018-03-07');
+INSERT INTO user (email, password, creationDate)
+VALUES
+    ('hector', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
+    ('raul', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
+    ('javier', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
+    ('cesar', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
+    ('senmao', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
+    ('michal', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07');
 
 INSERT INTO resources (name, creationDate, releaseDate, author_id)
-VALUES 
+VALUES
     ( 'Blade Runnner 2049', '2018-03-07', '2017-10-06', 1),
     ( 'Inception', '2018-03-07', '2010-07-16', 4),
     ( 'Citizen Ken', '2018-03-07', '1941-09-04', 3),
@@ -28,8 +28,8 @@ VALUES
     ('Barry Jenkins', 5),
     ('Kenneth Lonergan', 6);
 
-INSERT INTO book 
-VALUES 
+INSERT INTO book
+VALUES
     (3, 'Lee Goldberg', 7),
     (5, 'Harold Schechter', 8),
     (1, 'J. R. R. Tolkien', 9);
