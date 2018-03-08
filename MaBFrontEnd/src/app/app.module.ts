@@ -12,6 +12,8 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { SignupComponent } from './signup/signup.component';
 import { AuthInterceptor } from './_interceptors/auth.interceptor';
+import { ResourcesService } from './resources.service';
+import { UsersService } from './users.service';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,12 @@ import { AuthInterceptor } from './_interceptors/auth.interceptor';
   providers: [
     AuthGuard,
     AuthService,
+    ResourcesService,
+    UsersService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
+      multi: true,
     },
   ],
   bootstrap: [AppComponent]
