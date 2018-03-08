@@ -261,8 +261,23 @@ authRoutes.post(
         const password = request.body.password;
 
         db.fetchUser(email).
-            then(user => bcrypt.compare(password, user.password)).
-            then(() => response.status(200).send({ token: generateJWT(email) })).
+            then(
+                user =>
+                {
+                    return bcrypt.compare(password, user.password);
+                }).
+            then(
+                (passwordMatch) =>
+                {
+                    if (passwordMatch)
+                    {
+                        response.status(200).send({ token: generateJWT(email) });
+                    }
+                    else
+                    {
+                        throw new Error('Invalid credentials.');
+                    }
+                }).
             catch(() => response.status(400).send({ error: 'Invalid credentials.'}));
     });
 
