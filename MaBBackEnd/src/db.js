@@ -278,6 +278,58 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
 
 
 
+//   ad88888ba                                                   88
+//  d8"     "8b                                                  88
+//  Y8,                                                          88
+//  `Y8aaaaa,     ,adPPYba,  ,adPPYYba,  8b,dPPYba,   ,adPPYba,  88,dPPYba,
+//    `"""""8b,  a8P_____88  ""     `Y8  88P'   "Y8  a8"     ""  88P'    "8a
+//          `8b  8PP"""""""  ,adPPPPP88  88          8b          88       88
+//  Y8a     a8P  "8b,   ,aa  88,    ,88  88          "8a,   ,aa  88       88
+//   "Y88888P"    `"Ybbd8"'  `"8bbdP"Y8  88           `"Ybbd8"'  88       88
+
+
+/**
+ * Search for matching books.
+ *
+ * @param {string} term
+ * @returns {Promise} Resolves to search results array.
+ */
+const searchBooks = (term) =>
+    db.select('id', 'name', 'creationDate', 'releaseDate' , 'edition', 'writer').
+        from('resources').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        whereRaw(`MATCH(resources.name) AGAINST ('${term}')`).
+        orWhereRaw(`MATCH(book.writer) AGAINST ('${term}')`);
+
+
+/**
+ * Search for matching movies.
+ *
+ * @param {string} term
+ * @returns {Promise} Resolves to search results array.
+ */
+const searchMovies = (term) =>
+    db.select('id', 'name', 'creationDate', 'releaseDate' , 'director').
+        from('resources').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        whereRaw(`MATCH(resources.name) AGAINST ('${term}')`).
+        orWhereRaw(`MATCH(movie.director) AGAINST ('${term}')`);
+
+
+/**
+ * Search for matching users and resources.
+ *
+ * @param {string} term
+ * @returns {Promise} Resolves to search results array.
+ */
+const search = (term) =>
+    Promise.
+        all([searchBooks(term), searchMovies(term)]).
+        then(([books, movies]) => ({ books, movies }));
+
+
+
+
 //  88888888888
 //  88                                                                ,d
 //  88                                                                88
@@ -298,4 +350,6 @@ module.exports = {
 
     insertMovie,
     fetchMovieById,
+
+    search,
 };

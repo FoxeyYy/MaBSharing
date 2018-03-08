@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS resources (
   author_id int(5) NOT NULL,
   PRIMARY KEY(id),
   INDEX author_ind (author_id),
+  FULLTEXT(name),
   FOREIGN KEY (author_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
@@ -25,6 +26,7 @@ CREATE TABLE IF NOT EXISTS movie (
   resource_id int(5) NOT NULL,
   PRIMARY KEY(resource_id),
   INDEX resource_ind (resource_id),
+  FULLTEXT(director),
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
@@ -35,5 +37,6 @@ CREATE TABLE IF NOT EXISTS book (
   resource_id int(5) NOT NULL,
   PRIMARY KEY(resource_id),
   INDEX resource_ind (resource_id),
+  FULLTEXT(writer),
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;

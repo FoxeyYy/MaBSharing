@@ -391,7 +391,7 @@ userRoutes.post(
     (request, response) =>
     {
         response.status(501).end();
-    })
+    });
 
 
 /**
@@ -611,7 +611,8 @@ resourceRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.search(request.body.term).
+            then((results) => response.status(200).send(results));
     });
 
 
