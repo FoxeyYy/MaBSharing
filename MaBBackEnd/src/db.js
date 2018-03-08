@@ -131,7 +131,7 @@ const fetchBookById = (id) =>
                             writer: rows[0].writer,
                         });
                 }
-            })
+            });
 };
 
 
@@ -197,7 +197,26 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
  */
 const fetchMovieById = (id) =>
 {
-    return null;
+    return db.
+        from('resources').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        then(
+            (rows) =>
+            {
+                if (rows.length == 0)
+                {
+                    throw new Error('Invalid credentials.');
+                }
+                else
+                {
+                    return (
+                        {
+                            name: rows[0].name,
+                            release_date: rows[0].releaseDate,
+                            director: rows[0].director,
+                        });
+                }
+            })
 };
 
 
@@ -208,15 +227,48 @@ const fetchMovieById = (id) =>
  *
  *   - name
  *   - releaseDate
- *   - user
+ *   - userEmail
  *   - director
  *
  * @param {object} movie
  * @returns {number} Identifier of the new movie on the database.
  */
-const insertMovie = ({ name, releaseDate, user, director }) =>
+const insertMovie = ({ name, releaseDate, userEmail, director }) =>
 {
-    return null;
+    return fetchUser(userEmail).
+        then(
+            (user) =>
+            {
+                return db.transaction(
+                    (trx) =>
+                    {
+                        return trx.
+                            insert(
+                                {
+                                    name,
+                                    creationDate: new Date().toISOString().split('T')[0],
+                                    releaseDate,
+                                    author_id: user.id,
+                                }).
+                            into('resources').
+                            then(
+                                (ids) =>
+                                {
+                                    return trx.
+                                        insert(
+                                            {
+                                                director,
+                                                resource_id: ids[0],
+                                            }).
+                                        into('movie');
+                                });
+                    }).
+                    then(
+                        (inserts) =>
+                        {
+                            return inserts[0][0];
+                        });
+            })
 };
 
 
@@ -239,4 +291,7 @@ module.exports = {
 
     insertBook,
     fetchBookById,
+
+    insertMovie,
+    fetchMovieById,
 };

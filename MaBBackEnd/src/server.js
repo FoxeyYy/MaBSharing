@@ -500,7 +500,9 @@ resourceRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchMovieById(request.params.id).
+            then((movie) => response.status(200).send({ movie })).
+            catch((error) => response.status(500).end())
     });
 
 
@@ -514,7 +516,17 @@ resourceRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        const movie =
+        {
+            name: request.body.name,
+            releaseDate: request.body.release_date,
+            userEmail: request.body.user_email,
+            director: request.body.director,
+        };
+
+        db.insertMovie(movie).
+            then((id) => response.status(201).send({ id })).
+            catch((error) => response.status(500).end());
     });
 
 
