@@ -1,0 +1,27 @@
+<div class="container px-4 py-4 border rounded border-primary">
+
+<h2> M&amp;B Sharing
+  <br>
+  <small class="text-muted">Registration form </small>
+</h2>
+
+<div class="alert alert-danger" role="alert" *ngIf="errMsg">
+  {{errMsg}}
+</div>
+
+<form>
+  <div class="form-group">
+    <label for="usernameInput">Username</label>
+    <input type="text" class="form-control" id="usernameInput" placeholder="Desired username" [(ngModel)]="username" name="username">
+  </div>
+
+  <div class="form-group">
+    <label for="passwordInput">Password</label>
+    <input type="password" class="form-control" id="passwordInput" placeholder="Desired password" [(ngModel)]="password"
+      name="password">
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="loading" (click)="register()">Submit</button>
+
+</form>
+</div>
