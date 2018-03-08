@@ -113,6 +113,7 @@ const fetchBookById = (id) =>
 {
     return db.
         from('resources').
+        where('id', id).
         innerJoin('book', 'resources.id', 'book.resource_id').
         then(
             (rows) =>
@@ -171,6 +172,7 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                                 (ids) =>
                                 {
                                     return trx.
+                                        returning('resource_id').
                                         insert(
                                             {
                                                 edition,
@@ -200,6 +202,7 @@ const fetchMovieById = (id) =>
     return db.
         from('resources').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
+        where('resources.id', id).
         then(
             (rows) =>
             {
@@ -255,6 +258,7 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
                                 (ids) =>
                                 {
                                     return trx.
+                                        returning('resource_id').
                                         insert(
                                             {
                                                 director,
