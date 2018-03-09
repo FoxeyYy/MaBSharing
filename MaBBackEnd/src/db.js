@@ -92,6 +92,21 @@ const insertUser = (email, password) =>
 
 
 
+/**
+ * Inserts a new item on a user wishlist.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ *
+ * @returns {number} Item id on the wish list.
+ */
+const insertOnWishList = (userEmail, resourceID)
+{
+    return Promise.resolve();
+};
+
+
+
 
 //  88888888ba
 //  88      "8b
@@ -344,6 +359,8 @@ const search = (term) =>
 module.exports = {
     insertUser,
     fetchUser,
+
+    insertOnWishList,
 
     insertBook,
     fetchBookById,
