@@ -88,7 +88,11 @@ const jwtTokenIn = function (request)
 {
     if (request.header('Authorization'))
     {
-        return request.header('Authorization');
+        const authorization = request.header('Authorization');
+        return (
+            authorization.startsWith('Bearer ') ?
+                authorization.split(' ') :
+                authorization);
     }
     else
     {
@@ -420,7 +424,9 @@ userRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.insertOnWishList(request.body.email, request.body.id).
+            then((id) => response.status(201).send({ id })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
