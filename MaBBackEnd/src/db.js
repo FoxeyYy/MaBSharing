@@ -93,16 +93,67 @@ const insertUser = (email, password) =>
 
 
 /**
+ * Returns the resources ids in a user wish list.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the resources ids.
+ */
+const fetchResourcesOnWishList = (userID) =>
+    db('wishlist').select('resource_id').where('author_id', '=', userID);
+
+
+/**
+ * Returns the books in a user wish list.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to books on wish list.
+ */
+const fetchBooksOnWishList = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        where('resources.id', 'in', fetchResourcesOnWishList(userID));
+
+/**
+ * Returns the movies in a user wish list.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to books on wish list.
+ */
+const fetchMoviesOnWishList = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'director').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        where('resources.id', 'in', fetchResourcesOnWishList(userID));
+
+/**
+ *
+ * @param {string} userEmail
+ * @returns {Promise<Array>} Resolves to the user wish list.
+ */
+const fetchWishList = (userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                Promise.all(
+                    [
+                        fetchBooksOnWishList(user.id),
+                        fetchMoviesOnWishList(user.id),
+                    ])).
+        then(([books, movies]) => ({ books, movies }));
+
+
+/**
  * Inserts a new item on a user wishlist.
  *
  * @param {string} userEmail
  * @param {number} resourceID
  *
- * @returns {number} Item id on the wish list.
+ * @returns {Promise<number>} Item id on the wish list.
  */
-const insertOnWishList = (userEmail, resourceID)
+const insertOnWishList = (userEmail, resourceID) =>
 {
-    return Promise.resolve();
+    return Promise.resolve(999);
 };
 
 
@@ -135,7 +186,7 @@ const fetchBookById = (id) =>
             {
                 if (rows.length == 0)
                 {
-                    throw new Error('Invalid credentials.');
+                    return ({});
                 }
                 else
                 {
@@ -361,6 +412,7 @@ module.exports = {
     fetchUser,
 
     insertOnWishList,
+    fetchWishList,
 
     insertBook,
     fetchBookById,

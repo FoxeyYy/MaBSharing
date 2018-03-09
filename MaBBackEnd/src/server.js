@@ -409,7 +409,9 @@ userRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchWishList(request.body.user_email).
+            then((wishlist) => response.status(200).send({ wishlist })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
