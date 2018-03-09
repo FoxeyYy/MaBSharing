@@ -152,9 +152,16 @@ const fetchWishList = (userEmail) =>
  * @returns {Promise<number>} Item id on the wish list.
  */
 const insertOnWishList = (userEmail, resourceID) =>
-{
-    return Promise.resolve(999);
-};
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('wishlist').
+                    insert(
+                        {
+                            author_id: user.id,
+                            resource_id: resourceID,
+                        }).
+                    then(() => resourceID));
 
 
 

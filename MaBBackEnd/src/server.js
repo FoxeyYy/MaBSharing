@@ -426,8 +426,8 @@ userRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        db.insertOnWishList(request.body.email, request.body.id).
-            then((id) => response.status(201).send({ id })).
+        db.insertOnWishList(request.body.user_email, request.body.id).
+            then((id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).send({ error }));
     });
 
