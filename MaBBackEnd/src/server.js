@@ -91,7 +91,7 @@ const jwtTokenIn = function (request)
         const authorization = request.header('Authorization');
         return (
             authorization.startsWith('Bearer ') ?
-                authorization.split(' ') :
+                authorization.split(' ')[1] :
                 authorization);
     }
     else
