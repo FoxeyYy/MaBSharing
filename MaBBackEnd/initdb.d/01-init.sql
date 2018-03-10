@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user (
   PRIMARY KEY(id)
 ) ENGINE=INNODB;
 
+
 /* Resources table */
 CREATE TABLE IF NOT EXISTS resources (
   id int(5) NOT NULL AUTO_INCREMENT,
@@ -39,4 +40,22 @@ CREATE TABLE IF NOT EXISTS book (
   INDEX resource_ind (resource_id),
   FULLTEXT(writer),
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB;
+
+
+/* WishList table */
+CREATE TABLE IF NOT EXISTS wishlist (
+  author_id int(5) NOT NULL,
+  resource_id int(5) NOT NULL,
+  PRIMARY KEY(author_id, resource_id),
+  INDEX author_ind (author_id),
+  INDEX resource_ind (resource_id),
+  FOREIGN KEY (author_id)
+    REFERENCES user(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (resource_id)
+    REFERENCES resources(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=INNODB;
