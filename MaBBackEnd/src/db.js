@@ -91,6 +91,17 @@ const insertUser = (email, password) =>
 };
 
 
+/**
+ * Search for matching users.
+ *
+ * @param {string} term
+ * @returns {Promise} Resolves to search results array.
+ */
+const searchUsers = (term) =>
+    db.select('id', 'email').
+        from('user').
+        whereRaw(`MATCH(user.email) AGAINST ('${term}')`);
+
 
 /**
  * Returns the resources ids in a user wish list.
@@ -390,12 +401,12 @@ const searchMovies = (term) =>
 
 
 /**
- * Search for matching users and resources.
+ * Search for matching resources.
  *
  * @param {string} term
  * @returns {Promise} Resolves to search results array.
  */
-const search = (term) =>
+const searchResources = (term) =>
     Promise.
         all([searchBooks(term), searchMovies(term)]).
         then(([books, movies]) => ({ books, movies }));
@@ -418,6 +429,8 @@ module.exports = {
     insertUser,
     fetchUser,
 
+    searchUsers,
+
     insertOnWishList,
     fetchWishList,
 
@@ -427,5 +440,5 @@ module.exports = {
     insertMovie,
     fetchMovieById,
 
-    search,
+    searchResources,
 };

@@ -394,7 +394,9 @@ userRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.searchUsers(request.body.term).
+            then((users) => response.status(200).send({ users })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
@@ -619,8 +621,10 @@ resourceRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        db.search(request.body.term).
-            then((results) => response.status(200).send(results));
+        db.searchResources(request.body.term).
+            then((results) => response.status(200).send(results)).
+            catch((error) => response.status(500).send({ error }));
+
     });
 
 

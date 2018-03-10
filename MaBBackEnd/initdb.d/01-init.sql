@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS user (
   email varchar(64) NOT NULL UNIQUE CHECK (LENGTH(email) > 0),
   password char(64) NOT NULL,
   creationDate DATE NOT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  FULLTEXT(email)
 ) ENGINE=INNODB;
 
 
