@@ -14,8 +14,11 @@ export class UsersService {
     private http: HttpClient
   ) {}
 
-  /* Search users whose name contains search term */
-  searchResources(term: string): Observable<User[]> {
+  /**
+   * Search users whose name contains search term.
+   * @param term to search
+   */
+  searchUsers(term: string): Observable<User[]> {
     if (!term.trim()) {
       return of([]);
     }

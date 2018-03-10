@@ -7,13 +7,38 @@
   </button>
 
   <form class="d-inline my-2 mx-lg-4 w-100">
+    <div class="search">
       <div class="input-group">
-        <input class="form-control" type="search" placeholder="Search anything!" aria-label="Search">
+        <input #searchBox class="form-control" type="search" placeholder="Search anything!" aria-label="Search" (keyup)="search(searchBox.value)">
         <span class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button">Search</button>
+          <button class="btn btn-outline-info" type="button">Search</button>
         </span>
       </div>
-    </form>
+      <div class="list-group">
+        <div *ngFor="let result of results$ | async">
+          <a class="list-group-item list-group-item-action" *ngIf="result.username" routerLink="/user/{{result.id}}">
+            <h6>{{result.username}}</h6>
+            <span class="badge badge-primary">User</span>
+            <small> since {{result.creationDate | date }}</small>
+          </a>
+          <a class="list-group-item list-group-item-action" *ngIf="result.director" routerLink="/resources/movie/{{result.id}}">
+            <h6 class="d-inline">{{result.name}}</h6>
+            <small> ({{result.releaseDate | date:"y"}})</small>
+            <br>
+            <span class="badge badge-danger">Movie</span>
+            <small> by {{result.director}}</small>
+          </a>
+          <a class="list-group-item list-group-item-action" *ngIf="result.writer" routerLink="/resources/book/{{result.id}}">
+            <h6 class="d-inline">{{result.name}}</h6>
+            <small> ({{result.releaseDate | date:"y"}})</small>
+            <br>
+            <span class="badge badge-warning">Book</span>
+            <small> by {{result.writer}}, edition #{{result.edition}}</small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
