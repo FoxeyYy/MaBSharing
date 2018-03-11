@@ -1,4 +1,7 @@
-/* Users */
+--
+-- USERS
+--
+
 INSERT INTO
     user (id, email, password, creationDate)
 VALUES
@@ -9,7 +12,21 @@ VALUES
     (5, 'senmao@email.com', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
     (6, 'michal@email.com', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07');
 
-/* Resources */
+
+INSERT INTO
+    friendrequest (creation_date, review_date, accepted, orig_author_id, dest_author_id)
+VALUES
+    ('2018-03-07', '2018-03-07', 1, 1, 2),
+    ('2018-03-08', '2018-03-09', 0, 1, 3),
+    ('2018-03-08', NULL, NULL, 1, 6),
+    ('2018-03-08', NULL, NULL, 2, 3),
+    ('2018-03-10', NULL, NULL, 4, 1);
+
+
+--
+-- RESOURCES
+--
+
 INSERT INTO
     resources (id, name, creationDate, releaseDate, author_id)
 VALUES

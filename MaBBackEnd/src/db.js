@@ -104,6 +104,116 @@ const searchUsers = (term) =>
 
 
 /**
+ * Returns the friends id where a user, given its id, was the origin of
+ * the friendship request.
+ *
+ * @param {number} userID
+ * @returns {Promise<Array<number>>} Friends Id.
+ */
+const fetchOriginFriends = (userID) =>
+    db('friendrequest').
+        select('dest_author_id').
+        where('accepted', '=', '1').
+        andWhere('orig_author_id', '=', userID).
+        then((rows) => rows.map(row => row['dest_author_id']));
+
+
+/**
+ * Returns the friends id where a user, given its id, was the destiny of
+ * the friendship request.
+ *
+ * @param {number} userID
+ * @returns {Promise<Array<number>>} Friends Id.
+ */
+const fetchDestinyFriends = (userID) =>
+    db('friendrequest').
+        select('orig_author_id').
+        where('accepted', '=', '1').
+        andWhere('dest_author_id', '=', userID).
+        then((rows) => rows.map(row => row['orig_author_id']));
+
+
+/**
+ * Returns the friends of a user given its email address.
+ *
+ * @param {string} userEmail
+ * @returns {Promise<Array<number>>} Resolves to the friends Id.
+ */
+const fetchFriends = (userEmail) =>
+    fetchUser(userEmail).
+        then((user) => Promise.all([fetchOriginFriends(user.id), fetchDestinyFriends(user.id)])).
+        then(([origFriends, destFriends]) => origFriends.concat(destFriends));
+
+
+const fetchFriendshipRequests = (userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('friendrequest').
+                    select('orig_author_id').
+                    whereNull('accepted').
+                    andWhere('dest_author_id', '=', user.id).
+                    then((rows) => rows.map(row => row['orig_author_id'])));
+
+
+/**
+ * Adds a new friendship request from a user given its email address
+ * towards another user given its id.
+ *
+ * @param {string} userEmail
+ * @param {number} destUserID
+ *
+ * @returns {Promise<number>} Resolves to the destiny user Id.
+ */
+const insertFriendshipRequest = (userEmail, destUserID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('friendrequest').
+                insert(
+                    {
+                        creation_date: new Date().toISOString().split('T')[0],
+                        review_date: null,
+                        accepted: null,
+                        orig_author_id: user.id,
+                        dest_author_id: destUserID,
+                    })).
+        then(() => destUserID);
+
+
+const acceptFriendshipRequest = (userEmail, destUserID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('friendrequest').
+                    whereNull('accepted').
+                    andWhere('orig_author_id', '=', user.id).
+                    andWhere('dest_author_id', '=', destUserID).
+                    update(
+                        {
+                            review_date: new Date().toISOString().split('T')[0],
+                            accepted: 1,
+                        })).
+        then(() => destUserID);
+
+
+const denyFriendshipRequest = (userEmail, destUserID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('friendrequest').
+                    whereNull('accepted').
+                    andWhere('orig_author_id', '=', user.id).
+                    andWhere('dest_author_id', '=', destUserID).
+                    update(
+                        {
+                            review_date: new Date().toISOString().split('T')[0],
+                            accepted: 0,
+                        })).
+        then(() => destUserID);
+
+
+/**
  * Returns the resources ids in a user wish list.
  *
  * @param {number} userID
@@ -430,6 +540,12 @@ module.exports = {
     fetchUser,
 
     searchUsers,
+
+    fetchFriends,
+    fetchFriendshipRequests,
+    insertFriendshipRequest,
+    acceptFriendshipRequest,
+    denyFriendshipRequest,
 
     insertOnWishList,
     fetchWishList,

@@ -1,4 +1,7 @@
-/* Users table */
+--
+-- USERS
+--
+
 CREATE TABLE IF NOT EXISTS user (
   id int(5) NOT NULL AUTO_INCREMENT,
   email varchar(64) NOT NULL UNIQUE CHECK (LENGTH(email) > 0),
@@ -9,7 +12,34 @@ CREATE TABLE IF NOT EXISTS user (
 ) ENGINE=INNODB;
 
 
-/* Resources table */
+--
+-- USERS <---> USERS
+--
+
+CREATE TABLE IF NOT EXISTS friendrequest (
+  creation_date DATE NOT NULL,
+  review_date DATE,
+  accepted BOOLEAN,
+  orig_author_id int(5) NOT NULL,
+  dest_author_id int(5) NOT NULL,
+  PRIMARY KEY(creation_date, orig_author_id, dest_author_id),
+  INDEX orig_author_ind (orig_author_id),
+  INDEX dest_author_ind (dest_author_id),
+  FOREIGN KEY (orig_author_id)
+    REFERENCES user(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (dest_author_id)
+    REFERENCES user(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=INNODB;
+
+
+--
+-- RESOURCES
+--
+
 CREATE TABLE IF NOT EXISTS resources (
   id int(5) NOT NULL AUTO_INCREMENT,
   name varchar(30) NOT NULL,
@@ -22,7 +52,6 @@ CREATE TABLE IF NOT EXISTS resources (
   FOREIGN KEY (author_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
-/* Movie table */
 CREATE TABLE IF NOT EXISTS movie (
   director varchar(30) NOT NULL,
   resource_id int(5) NOT NULL,
@@ -32,7 +61,6 @@ CREATE TABLE IF NOT EXISTS movie (
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
-/* Book table */
 CREATE TABLE IF NOT EXISTS book (
   edition int(5) NOT NULL,
   writer varchar(30) NOT NULL,
@@ -44,7 +72,10 @@ CREATE TABLE IF NOT EXISTS book (
 ) ENGINE=INNODB;
 
 
-/* WishList table */
+--
+-- USERS <---> RESOURCES
+--
+
 CREATE TABLE IF NOT EXISTS wishlist (
   author_id int(5) NOT NULL,
   resource_id int(5) NOT NULL,

@@ -340,6 +340,23 @@ userRoutes.get(
 
 
 /**
+ * GET {userRoutes}/friends
+ *
+ * Returns the friends of the user identified by the JWT sent in the
+ * request.
+ */
+userRoutes.get(
+    '/friends',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchFriends(request.body.user_email).
+            then((friends) => response.status(200).send({ friends })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
  * GET {userRoutes}/friendship_requests
  *
  * Returns the pending friendship requests of the user identified by the
@@ -350,7 +367,9 @@ userRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchFriendshipRequests(request.body.user_email).
+            then((friendship_requests) => response.status(200).send({ friendship_requests })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
@@ -365,22 +384,30 @@ userRoutes.post(
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.insertFriendshipRequest(request.body.user_email, request.body.dest_user_id).
+            then((id) => response.status(200).send({ id })).
+            catch((error) => response.status(500).end());
     });
 
 
 /**
- * PATCH {userRoutes}/friendship_requests/:request
+ * PATCH {userRoutes}/friendship_requests/
  *
  * Accepts/Denies a friendship requests directed towards the user
  * identified by the JWT sent in the request.
  */
 userRoutes.patch(
-    '/friendship_requests/:request',
+    '/friendship_requests/',
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        (request.body.accepted === 'true') ?
+            db.acceptFriendshipRequest(request.body.user_email, request.body.dest_user_id).
+                then((id) => response.status(200).send({ id })).
+                catch((error) => response.status(500).send({ error })) :
+            db.denyFriendshipRequest(request.body.user_email, request.body.dest_user_id).
+                then((id) => response.status(200).send({ id })).
+                catch((error) => response.status(500).send({ error }));
     });
 
 
