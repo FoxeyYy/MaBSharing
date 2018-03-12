@@ -489,6 +489,32 @@ const fetchComments = (movieID) =>
 };
 
 
+/**
+ * Inserts a new comment about a resource by a user.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ * @param {string} comment
+ *
+ * @returns {Promise<number>} Resolves to the resource id.
+ */
+const insertComment = (userEmail, resourceID, comment) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('comment').
+                    insert(
+                        {
+                            creationDate: new Date().toISOString().split('T')[0],
+                            author_id: user.id,
+                            resource_id: resourceID,
+                            comment,
+                        }).
+                    then(() => resourceID));
+
+
+
+
 //   ad88888ba                                                   88
 //  d8"     "8b                                                  88
 //  Y8,                                                          88
@@ -574,6 +600,7 @@ module.exports = {
     fetchMovieById,
 
     fetchComments,
+    insertComment,
 
     searchResources,
 };
