@@ -71,6 +71,18 @@ CREATE TABLE IF NOT EXISTS book (
   FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
+CREATE TABLE IF NOT EXISTS comment (
+  creationDate DATE NOT NULL,
+  author_id int(5) NOT NULL,
+  resource_id int(5) NOT NULL,
+  comment varchar(1024) NOT NULL,
+  PRIMARY KEY(creationDate, author_id, resource_id),
+  INDEX author_ind (author_id),
+  INDEX resource_ind (resource_id),
+  FOREIGN KEY (author_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB;
+
 
 --
 -- USERS <---> RESOURCES
