@@ -13,6 +13,10 @@ VALUES
     (6, 'michal@email.com', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07');
 
 
+--
+-- USERS <---> USERS
+--
+
 INSERT INTO
     friendrequest (creation_date, review_date, accepted, orig_author_id, dest_author_id)
 VALUES
@@ -56,6 +60,20 @@ VALUES
     (3, 'Lee Goldberg', 7),
     (5, 'Harold Schechter', 8),
     (1, 'J. R. R. Tolkien', 9);
+
+INSERT INTO
+    comment (creationDate, author_id, resource_id, comment)
+VALUES
+    ('2018-03-11', 1, 1, '🚀'),
+    ('2018-03-11', 2, 1, '👏'),
+    ('2018-03-13', 3, 1, '👎'),
+    ('2018-03-15', 2, 1, '🔥'),
+    ('2018-03-11', 1, 4, '🤔');
+
+
+--
+-- USERS <---> RESOURCES
+--
 
 INSERT INTO
     wishlist (author_id, resource_id)

@@ -588,11 +588,13 @@ resourceRoutes.post(
  * Returns the a new comment to the given resource.
  */
 resourceRoutes.get(
-    '/:resource/comments',
+    '/:resource_id/comments',
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchComments(request.params.resource_id).
+            then((comments) => response.status(200).send({ comments })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
@@ -602,11 +604,13 @@ resourceRoutes.get(
  * Adds a new comment to the given resource.
  */
 resourceRoutes.post(
-    '/:resource/comments',
+    '/:resource_id/comments',
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.insertComment(request.body.user_email, request.params.resource_id, request.body.comment).
+            then((resource_id) => response.status(200).send({ resource_id })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
