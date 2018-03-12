@@ -397,15 +397,15 @@ userRoutes.post(
  * identified by the JWT sent in the request.
  */
 userRoutes.patch(
-    '/friendship_requests/',
+    '/friendship_requests/:dest_user_id',
     ensureAuthenticated,
     (request, response) =>
     {
         (request.body.accepted === 'true') ?
-            db.acceptFriendshipRequest(request.body.user_email, request.body.dest_user_id).
+            db.acceptFriendshipRequest(request.body.user_email, request.params.dest_user_id).
                 then((id) => response.status(200).send({ id })).
                 catch((error) => response.status(500).send({ error })) :
-            db.denyFriendshipRequest(request.body.user_email, request.body.dest_user_id).
+            db.denyFriendshipRequest(request.body.user_email, request.params.dest_user_id).
                 then((id) => response.status(200).send({ id })).
                 catch((error) => response.status(500).send({ error }));
     });
