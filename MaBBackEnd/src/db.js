@@ -470,6 +470,23 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
 };
 
 
+/**
+ * Fetches the comments make about a resource.
+ *
+ * @param {number} movieID
+ * @returns {Promise<Array>} Comments.
+ */
+const fetchComments = (movieID) =>
+{
+    return db.
+        from('comment').
+        where('resource_id', '=', movieID).
+        then(
+            (rows) =>
+            {
+                return rows;
+            })
+};
 
 
 //   ad88888ba                                                   88
@@ -555,6 +572,8 @@ module.exports = {
 
     insertMovie,
     fetchMovieById,
+
+    fetchComments,
 
     searchResources,
 };
