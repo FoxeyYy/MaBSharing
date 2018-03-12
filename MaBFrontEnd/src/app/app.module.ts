@@ -14,6 +14,8 @@ import { SignupComponent } from './signup/signup.component';
 import { AuthInterceptor } from './_interceptors/auth.interceptor';
 import { ResourcesService } from './resources.service';
 import { UsersService } from './users.service';
+import { SearchComponent } from './search/search.component';
+import { WallComponent } from './wall/wall.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { UsersService } from './users.service';
     LoginComponent,
     NavbarComponent,
     HomeComponent,
-    SignupComponent
+    SignupComponent,
+    SearchComponent,
+    WallComponent
   ],
   imports: [
     BrowserModule,

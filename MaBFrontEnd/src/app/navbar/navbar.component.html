@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
-  <a class="navbar-brand" href="#">MaBSharing</a>
+  <a class="navbar-brand" routerLink="/home">MaBSharing</a>
 
   <button class="navbar-toggler my-1" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
     aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +11,7 @@
       <div class="input-group">
         <input #searchBox class="form-control" type="search" placeholder="Search anything!" aria-label="Search" (keyup)="search(searchBox.value)">
         <span class="input-group-append">
-          <button class="btn btn-outline-info" type="button">Search</button>
+          <button class="btn btn-outline-info" type="button" routerLink="/search">Search</button>
         </span>
       </div>
       <div class="list-group">
