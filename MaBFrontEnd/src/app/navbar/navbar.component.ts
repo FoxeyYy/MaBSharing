@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
           map(e => {
             const movies = e[0]["movies"];
             const books = e[0]["books"];
-            const users = e[1];
+            const users = e[1]["users"];
 
             var result = [].concat(movies).concat(books).concat(users);
             return result;
@@ -60,11 +60,19 @@ export class NavbarComponent implements OnInit {
   }
 
   /**
-   * Searchs a term.
+   * Searchs a term to be displayed in the navbar itself.
    * @param term to search
    */
-  search(term: string) {
+  quickSearch(term: string) {
     this.searchTerms.next(term);
+  }
+
+/**
+ * Searchs an item to be displayed in the search component.
+ * @param term to search.
+ */
+  search(term: string) {
+    this.router.navigate(['/search', {term: term}]);
   }
 
   /**

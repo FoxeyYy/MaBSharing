@@ -6,6 +6,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { SignupComponent } from './signup/signup.component';
 import { SearchComponent } from './search/search.component';
 import { WallComponent } from './wall/wall.component';
+import { SearchResolver } from './search/search-resolver.service';
 
 const routes: Routes = [
   { path: '',
@@ -13,7 +14,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: WallComponent },
-      { path: 'search', component: SearchComponent }
+      { 
+        path: 'search',
+        component: SearchComponent,
+        resolve: {
+          results: SearchResolver
+        }}
     ] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
@@ -22,6 +28,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  exports: [ RouterModule ],
+  providers: [
+    SearchResolver
+  ]
 })
 export class AppRoutingModule {}
