@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit {
   private results$: Observable<User[] | Book[] | Movie[]>;
   private searchTerms = new Subject<string>();
   private static readonly SEARCH_MIN = 4;
+  private searchBarFocused: boolean = false;
 
   constructor(
     private router: Router,
