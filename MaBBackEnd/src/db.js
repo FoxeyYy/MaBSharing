@@ -98,7 +98,7 @@ const insertUser = (email, password) =>
  * @returns {Promise} Resolves to search results array.
  */
 const searchUsers = (term) =>
-    db.select('id', 'email').
+    db.select('id', 'email', 'creationDate').
         from('user').
         whereRaw(`MATCH(user.email) AGAINST ('${term}')`);
 
