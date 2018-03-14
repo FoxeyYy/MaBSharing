@@ -25,7 +25,7 @@ export class UsersService {
 
     return this.http.post<User[]>(`${this.usersUrl}/search`, {term: term})
     .pipe(
-      tap(heroes => heroes),
+      tap(user => user),
       catchError(error => of([]))
     );
   }
