@@ -53,7 +53,8 @@
 </div>
 
 <div class="content mx-auto rounded my-4 list-group">
-  <h5 class="list-group-item list-group-item-success">Comments section</h5>
+  <h5 *ngIf="!comments.length" class="list-group-item list-group-item-success">There are no comments yet, leave yours!</h5>
+  <h5 *ngIf="comments.length" class="list-group-item list-group-item-success">{{comments.length}} comments</h5>
   <div *ngFor="let comment of comments | reverse" class="list-group-item">
     <small>
       <a routerLink="/user/{{comment.author_id}}">{{comment.author_id}}</a> on {{comment.creationDate | date}}:

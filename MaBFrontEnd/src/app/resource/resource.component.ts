@@ -29,7 +29,7 @@ export class ResourceComponent implements OnInit {
     );
 
     this.resourceService.getComments(this.resource.id).subscribe(
-      comments => { 
+      comments => {
         this.comments = comments;
       });
   }
