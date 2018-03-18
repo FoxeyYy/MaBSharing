@@ -21,14 +21,14 @@
             <span class="badge badge-primary">User</span>
             <small> since {{result.creationDate | date }}</small>
           </a>
-          <a class="list-group-item list-group-item-action" *ngIf="result.director" routerLink="/resources/movie/{{result.id}}">
+          <a class="list-group-item list-group-item-action" *ngIf="result.director" routerLink="/movie/{{result.id}}">
             <h6 class="d-inline">{{result.name}}</h6>
             <small> ({{result.releaseDate | date:"y"}})</small>
             <br>
             <span class="badge badge-danger">Movie</span>
             <small> by {{result.director}}</small>
           </a>
-          <a class="list-group-item list-group-item-action" *ngIf="result.writer" routerLink="/resources/book/{{result.id}}">
+          <a class="list-group-item list-group-item-action" *ngIf="result.writer" routerLink="/book/{{result.id}}">
             <h6 class="d-inline">{{result.name}}</h6>
             <small> ({{result.releaseDate | date:"y"}})</small>
             <br>

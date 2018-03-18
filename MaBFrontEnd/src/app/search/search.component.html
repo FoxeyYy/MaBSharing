@@ -11,7 +11,7 @@
 
     <div class="col-md list-group mt-3 px-3">
       <h5 class="list-group-item list-group-item-warning">{{books.length}} books</h5>
-      <a *ngFor="let book of books" class="list-group-item list-group-item-action" routerLink="/resources/book/{{book.id}}">
+      <a *ngFor="let book of books" class="list-group-item list-group-item-action" routerLink="/book/{{book.id}}">
         <h6>{{book.name}}</h6>
         <small> Written by {{book.writer}}
           <br> Edition #{{book.edition}} released on {{book.releaseDate | date}}</small>
@@ -20,7 +20,7 @@
 
     <div class="col-md list-group mt-3 px-3">
       <h5 class="list-group-item list-group-item-danger">{{movies.length}} movies</h5>
-      <a *ngFor="let movie of movies" class="list-group-item list-group-item-action" routerLink="/resources/movie/{{movie.id}}">
+      <a *ngFor="let movie of movies" class="list-group-item list-group-item-action" routerLink="/movie/{{movie.id}}">
         <h6>{{movie.name}}</h6>
         <small> Directed by {{movie.director}}
           <br> Released on {{movie.releaseDate | date}}</small>

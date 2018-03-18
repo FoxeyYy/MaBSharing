@@ -16,6 +16,9 @@ import { ResourcesService } from './resources.service';
 import { UsersService } from './users.service';
 import { SearchComponent } from './search/search.component';
 import { WallComponent } from './wall/wall.component';
+import { ResourceComponent } from './resource/resource.component';
+import { ErrorComponent } from './error/error.component';
+import { ReversePipe } from './_pipes/ReversePipe';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { WallComponent } from './wall/wall.component';
     HomeComponent,
     SignupComponent,
     SearchComponent,
-    WallComponent
+    WallComponent,
+    ResourceComponent,
+    ErrorComponent,
+    ReversePipe
   ],
   imports: [
     BrowserModule,

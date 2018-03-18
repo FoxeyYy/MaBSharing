@@ -7,6 +7,10 @@ import { SignupComponent } from './signup/signup.component';
 import { SearchComponent } from './search/search.component';
 import { WallComponent } from './wall/wall.component';
 import { SearchResolver } from './search/search-resolver.service';
+import { ResourceComponent } from './resource/resource.component';
+import { BookResolver } from './resource/book-resolver.service';
+import { MovieResolver } from './resource/movie-resolver.service';
+import { ErrorComponent } from './error/error.component';
 
 const routes: Routes = [
   { path: '',
@@ -14,12 +18,28 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: WallComponent },
+      { path: 'error', component: ErrorComponent},
       { 
         path: 'search',
         component: SearchComponent,
         resolve: {
           results: SearchResolver
-        }}
+        }
+      },
+      { 
+        path: 'book/:id',
+        component: ResourceComponent,
+        resolve: {
+          results: BookResolver
+        }
+      },
+      { 
+        path: 'movie/:id',
+        component: ResourceComponent,
+        resolve: {
+          results: MovieResolver
+        }
+      }
     ] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
@@ -30,7 +50,9 @@ const routes: Routes = [
   imports: [ RouterModule.forRoot(routes) ],
   exports: [ RouterModule ],
   providers: [
-    SearchResolver
+    SearchResolver,
+    BookResolver,
+    MovieResolver
   ]
 })
 export class AppRoutingModule {}

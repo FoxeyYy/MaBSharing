@@ -4,7 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Movie } from './Movie';
 import { Book } from './Book';
 import { of } from 'rxjs/observable/of';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
+import { Resource } from './Resource';
+import { Comment } from './Comment';
 
 @Injectable()
 export class ResourcesService {
@@ -48,6 +50,51 @@ export class ResourcesService {
           return of();
         })
       );
+  }
+
+  /**
+   * Retrieves a book from the server.
+   * @param id of the book.
+   */
+  getBook(id: number): Observable<Book> {
+    return this.http.get<Book>(`${this.resourcesUrl}/book/${id}`).pipe(
+      map(book => book["book"]),
+      catchError(error => of({} as Book))
+    )
+  }
+
+  /**
+   * Retrieves a movie from the server.
+   * @param id of the movie.
+   */
+  getMovie(id: number): Observable<Movie> {
+    return this.http.get<Book>(`${this.resourcesUrl}/movie/${id}`).pipe(
+      map(movie => movie["movie"]),
+      catchError(error => of({} as Movie))
+    )
+  }
+
+  /**
+   * Gets the list of comments of a resource.
+   * @param id of the resource.
+   */
+  getComments(id: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.resourcesUrl}/${id}/comments`).pipe(
+      map(comments => comments["comments"]),
+      catchError(error => of(['error']))
+    )
+  }
+
+  /**
+   * Posts a comment to a resource, returning the ID if successful, -1 otherwise.
+   * @param id of the resource.
+   * @param comment the comment to post.
+   */
+  postComment(id: number, comment: string): Observable<number> {
+    return this.http.post<any>(`${this.resourcesUrl}/${id}/comments`, { comment: comment }).pipe(
+      map(id => id),
+      catchError(error => of(-1))
+    )
   }
 
 }
