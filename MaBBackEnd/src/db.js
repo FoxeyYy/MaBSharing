@@ -320,9 +320,12 @@ const fetchBookById = (id) =>
                 {
                     return (
                         {
+                            id: rows[0].id,
                             name: rows[0].name,
-                            release_date: rows[0].releaseDate,
+                            releaseDate: rows[0].releaseDate,
+                            creationDate: rows[0].creationDate,
                             edition: rows[0].edition,
+                            author: rows[0].author_id,
                             writer: rows[0].writer,
                         });
                 }
@@ -408,8 +411,11 @@ const fetchMovieById = (id) =>
                 {
                     return (
                         {
+                            id: rows[0].id,
                             name: rows[0].name,
-                            release_date: rows[0].releaseDate,
+                            creationDate: rows[0].creationDate,
+                            releaseDate: rows[0].releaseDate,
+                            author: rows[0].author_id,
                             director: rows[0].director,
                         });
                 }
