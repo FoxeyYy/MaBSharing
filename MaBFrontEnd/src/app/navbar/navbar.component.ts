@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
   private results$: Observable<User[] | Book[] | Movie[]>;
   private searchTerms = new Subject<string>();
   private static readonly SEARCH_MIN = 4;
-  private searchBarFocused: boolean = false;
+  private showSearches: boolean = false;
 
   constructor(
     private router: Router,
@@ -74,6 +74,7 @@ export class NavbarComponent implements OnInit {
  */
   search(term: string) {
     this.router.navigate(['/search', {term: term}]);
+    this.showSearches = false;
   }
 
   /**
