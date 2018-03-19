@@ -46,6 +46,32 @@ const db =
 
 
 /**
+ * Fetches an user from the database given its id.
+ *
+ * @param {number} id
+ * @returns {object} Matching user.
+ */
+const fetchUserById = (id) =>
+{
+    return db.
+        select('id', 'email', 'creationDate').
+        from('user').
+        where({ id }).
+        then(
+            (rows) =>
+            {
+                if (rows.length == 0)
+                {
+                    return ({});
+                }
+                else
+                {
+                    return rows[0];
+                }
+            });
+};
+
+/**
  * Fetches a user from the database given its email address.
  *
  * @param {string} email
@@ -586,6 +612,7 @@ const searchResources = (term) =>
 
 module.exports = {
     insertUser,
+    fetchUserById,
     fetchUser,
 
     searchUsers,

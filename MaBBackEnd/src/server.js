@@ -323,6 +323,20 @@ app.use('/auth', authRoutes);
  */
 const userRoutes = express.Router();
 
+/**
+ * GET {userRoutes}/:id
+ *
+ * Returns the information about an user.
+ */
+userRoutes.get(
+    '/:id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchUserById(request.params.id).
+            then((user) => response.status(200).send({ user })).
+            catch((error) => response.status(500).end());
+    });
 
 /**
  * GET {userRoutes}/events
