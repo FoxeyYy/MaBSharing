@@ -19,6 +19,7 @@ import { WallComponent } from './wall/wall.component';
 import { ResourceComponent } from './resource/resource.component';
 import { ErrorComponent } from './error/error.component';
 import { ReversePipe } from './_pipes/ReversePipe';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ReversePipe } from './_pipes/ReversePipe';
     WallComponent,
     ResourceComponent,
     ErrorComponent,
-    ReversePipe
+    ReversePipe,
+    UserComponent
   ],
   imports: [
     BrowserModule,

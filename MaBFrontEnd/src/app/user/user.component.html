@@ -1,0 +1,17 @@
+<div class="content mx-auto rounded my-4">
+
+  <h2 class="list-group-item list-group-item-primary mb-3"> {{user.email}} </h2>
+
+  <div class="row px-3 pb-3">
+
+    <div class="col-md">
+      User since {{user.creationDate}}
+    </div>
+
+    <div class="col-md mt-2 mt-md-0">
+      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" (click)="sendFriendRequest()"> Send friend request</button>
+    </div>
+
+  </div>
+
+</div>
