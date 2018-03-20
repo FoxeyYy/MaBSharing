@@ -265,7 +265,7 @@ const fetchBooksOnWishList = (userID) =>
  * Returns the movies in a user wish list.
  *
  * @param {number} userID
- * @returns {Promise<array>} Resolves to books on wish list.
+ * @returns {Promise<array>} Resolves to movies on wish list.
  */
 const fetchMoviesOnWishList = (userID) =>
     db.from('resources').
@@ -274,6 +274,7 @@ const fetchMoviesOnWishList = (userID) =>
         where('resources.id', 'in', fetchResourcesOnWishList(userID));
 
 /**
+ * Returns the wish list of user identified by the given email address.
  *
  * @param {string} userEmail
  * @returns {Promise<Array>} Resolves to the user wish list.
@@ -303,6 +304,81 @@ const insertOnWishList = (userEmail, resourceID) =>
         then(
             (user) =>
                 db('wishlist').
+                    insert(
+                        {
+                            author_id: user.id,
+                            resource_id: resourceID,
+                        }).
+                    then(() => resourceID));
+
+/**
+ * Returns the resources ids marked as read/seen by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the resources ids.
+ */
+const fetchResourcesMarked = (userID) =>
+    db('marked').select('resource_id').where('author_id', '=', userID);
+
+/**
+ * Returns the books read by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to books read.
+ */
+const fetchBooksRead = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        where('resources.id', 'in', fetchResourcesMarked(userID));
+
+/**
+ * Returns the movies seen by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the movies seen.
+ */
+const fetchMoviesSeen = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'director').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        where('resources.id', 'in', fetchResourcesMarked(userID));
+
+
+/**
+ * Returns the books read / movies seen of user identified by the given
+ * email address.
+ *
+ * @param {string} userEmail
+ * @returns {Promise<Array>} Resolves to the user marked list.
+ */
+const fetchMarkedList = (userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                Promise.all(
+                    [
+                        fetchBooksRead(user.id),
+                        fetchMoviesSeen(user.id),
+                    ])).
+        // then(([books, movies]) => ({ books, movies }));
+        then(
+            ([books, movies]) => ({ books, movies }));
+
+
+/**
+ * Inserts a new item on a user marked list.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ *
+ * @returns {Promise<number>} Item id on the marked list.
+ */
+const insertOnMarkedList = (userEmail, resourceID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('marked').
                     insert(
                         {
                             author_id: user.id,
@@ -625,6 +701,9 @@ module.exports = {
 
     insertOnWishList,
     fetchWishList,
+
+    insertOnMarkedList,
+    fetchMarkedList,
 
     insertBook,
     fetchBookById,

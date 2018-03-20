@@ -323,20 +323,6 @@ app.use('/auth', authRoutes);
  */
 const userRoutes = express.Router();
 
-/**
- * GET {userRoutes}/:id
- *
- * Returns the information about an user.
- */
-userRoutes.get(
-    '/:id',
-    ensureAuthenticated,
-    (request, response) =>
-    {
-        db.fetchUserById(request.params.id).
-            then((user) => response.status(200).send({ user })).
-            catch((error) => response.status(500).end());
-    });
 
 /**
  * GET {userRoutes}/events
@@ -472,6 +458,56 @@ userRoutes.post(
         db.insertOnWishList(request.body.user_email, request.body.id).
             then((id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * GET {userRoutes}/marked
+ *
+ * Returns the list of resources marked as seen/read by the user
+ * identified by the JWT sent in the request.
+ */
+userRoutes.get(
+    '/marked',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchMarkedList(request.body.user_email).
+            then((marked) => response.status(200).send({ marked })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * POST {userRoutes}/marked/:resource
+ *
+ * Adds a new resource to the list of books read or movies watched by
+ * the user identified by the JWT sent in the request.
+ */
+userRoutes.post(
+    '/marked',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.insertOnMarkedList(request.body.user_email, request.body.id).
+            then((resource_id) => response.status(201).send({ resource_id })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * GET {userRoutes}/:id
+ *
+ * Returns the information about an user.
+ */
+userRoutes.get(
+    '/:id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchUserById(request.params.id).
+            then((user) => response.status(200).send({ user })).
+            catch((error) => response.status(500).end());
     });
 
 

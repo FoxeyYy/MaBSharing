@@ -87,3 +87,16 @@ VALUES
     (5, 2),
     (5, 5),
     (6, 7);
+
+INSERT INTO
+    marked (author_id, resource_id)
+VALUES
+    (1, 2),
+    (1, 4),
+    (1, 9),
+    (2, 1),
+    (2, 2),
+    (3, 7),
+    (3, 8),
+    (5, 4),
+    (6, 6);
