@@ -7,3 +7,7 @@
 .search {
     position: relative;
 }
+
+.nav-item {
+    white-space: nowrap;
+}

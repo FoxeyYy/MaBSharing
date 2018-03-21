@@ -1,0 +1,10 @@
+.content {
+    max-width: 75%;
+    background-color: white;
+}
+
+@media only screen and (max-width: 800px) {
+    .content {
+        max-width: 100%;
+    }
+}
