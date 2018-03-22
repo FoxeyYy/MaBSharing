@@ -790,6 +790,16 @@ const insertComment = (userEmail, resourceID, comment) =>
                     then(() => resourceID));
 
 
+/**
+ * Fetches the ratings make about a resource.
+ *
+ * @param {number} resourceID
+ * @returns {Promise<Array>} Ratings.
+ */
+const fetchRatings = (resourceID) =>
+    db.from('rating').where('resource_id', '=', resourceID);
+
+
 
 
 //   ad88888ba                                                   88
@@ -886,6 +896,8 @@ module.exports = {
 
     fetchComments,
     insertComment,
+
+    fetchRatings,
 
     searchResources,
 };

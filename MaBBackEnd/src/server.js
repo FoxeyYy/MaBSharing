@@ -721,25 +721,12 @@ resourceRoutes.post(
  * Returns the a new rating to the given resource.
  */
 resourceRoutes.get(
-    '/:resource/ratings',
+    '/:resource_id/ratings',
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
-    });
-
-
-/**
- * POST {resourceRoutes}/:resource/ratings
- *
- * Adds a new rating to the given resource.
- */
-resourceRoutes.post(
-    '/:resource/ratings',
-    ensureAuthenticated,
-    (request, response) =>
-    {
-        response.status(501).end();
+        db.fetchRatings(request.params.resource_id).
+            then((ratings) => response.status(200).send(ratings));
     });
 
 
