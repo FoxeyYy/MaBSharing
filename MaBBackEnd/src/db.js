@@ -387,6 +387,176 @@ const insertOnMarkedList = (userEmail, resourceID) =>
                     then(() => resourceID));
 
 
+/**
+ * Returns the resources ids disliked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the resources ids.
+ */
+const fetchResourcesDisliked = (userID) =>
+    db('rating').
+        select('resource_id').
+        where('author_id', '=', userID).
+        andWhere('likeIt', '=', '0');
+
+/**
+ * Returns the resources ids liked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the resources ids.
+ */
+const fetchResourcesLiked = (userID) =>
+    db('rating').
+        select('resource_id').
+        where('author_id', '=', userID).
+        andWhere('likeIt', '=', '1');
+
+/**
+ * Returns the books disliked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the books liked.
+ */
+const fetchBooksDisliked = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        where('resources.id', 'in', fetchResourcesDisliked(userID));
+
+/**
+ * Returns the books liked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the books liked.
+ */
+const fetchBooksLiked = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        where('resources.id', 'in', fetchResourcesLiked(userID));
+
+/**
+ * Returns the books read by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to books read.
+ */
+const fetchBooksRated = (userID) =>
+    Promise.
+        all(
+            [
+                fetchBooksDisliked(userID),
+                fetchBooksLiked(userID),
+            ]).
+        then(([disliked, liked]) => ({ disliked, liked }));
+
+/**
+ * Returns the movies disliked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the movies liked.
+ */
+const fetchMoviesDisliked = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'director').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        where('resources.id', 'in', fetchResourcesDisliked(userID));
+
+/**
+ * Returns the movies liked by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to the movies liked.
+ */
+const fetchMoviesLiked = (userID) =>
+    db.from('resources').
+        select('resource_id', 'name', 'releaseDate', 'director').
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        where('resources.id', 'in', fetchResourcesLiked(userID));
+
+/**
+ * Returns the movies read by a user.
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Resolves to movies read.
+ */
+const fetchMoviesRated = (userID) =>
+    Promise.
+        all(
+            [
+                fetchMoviesDisliked(userID),
+                fetchMoviesLiked(userID),
+            ]).
+        then(([disliked, liked]) => ({ disliked, liked }));
+
+/**
+ * Returns the resources rated by a user identified by the given email
+ * address.
+ *
+ * @param {string} userEmail
+ * @returns {Promise<Array>} Resolves to the user rated list.
+ */
+const fetchRatedList = (userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                Promise.all(
+                    [
+                        fetchBooksRated(user.id),
+                        fetchMoviesRated(user.id),
+                    ])).
+        then(
+            ([books, movies]) => ({ books, movies }));
+
+
+/**
+ * Inserts a new item on a user rated list.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ * @param {boolean} liked
+ *
+ * @returns {Promise<number>} Item id on the rated list.
+ */
+const insertOnRatedList = (userEmail, resourceID, liked) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('rating').
+                    insert(
+                        {
+                            likeIt: (liked) ? 1 : 0,
+                            lastModified: new Date().toISOString().split('T')[0],
+                            author_id: user.id,
+                            resource_id: resourceID,
+                        }).
+                    then(() => resourceID));
+
+
+/**
+ * Updates a rating from a user given its email address.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ * @param {boolean} liked
+ *
+ * @returns {Promise<number>} Item id on the rated list.
+ */
+const updateRating = (userEmail, resourceID, liked) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('rating').
+                    andWhere('author_id', '=', user.id).
+                    andWhere('resource_id', '=', resourceID).
+                    update(
+                        {
+                            likeIt: (liked) ? 1 : 0,
+                            lastModified: new Date().toISOString().split('T')[0],
+                        })).
+        then(() => resourceID);
+
+
 
 
 //  88888888ba
@@ -704,6 +874,10 @@ module.exports = {
 
     insertOnMarkedList,
     fetchMarkedList,
+
+    fetchRatedList,
+    insertOnRatedList,
+    updateRating,
 
     insertBook,
     fetchBookById,

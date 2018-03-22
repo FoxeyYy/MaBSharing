@@ -479,7 +479,7 @@ userRoutes.get(
 
 
 /**
- * POST {userRoutes}/marked/:resource
+ * POST {userRoutes}/marked
  *
  * Adds a new resource to the list of books read or movies watched by
  * the user identified by the JWT sent in the request.
@@ -490,6 +490,57 @@ userRoutes.post(
     (request, response) =>
     {
         db.insertOnMarkedList(request.body.user_email, request.body.id).
+            then((resource_id) => response.status(201).send({ resource_id })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * GET {userRoutes}/ratings
+ *
+ * Returns the list of resources rated by the user identified by the JWT
+ * sent in the request.
+ */
+userRoutes.get(
+    '/ratings',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchRatedList(request.body.user_email).
+            then((ratings) => response.status(200).send({ ratings })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * POST {userRoutes}/ratings
+ *
+ * Adds a new resource to the list of books read or movies rated by the
+ * user identified by the JWT sent in the request.
+ */
+userRoutes.post(
+    '/ratings',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.insertOnRatedList(request.body.user_email, request.body.id, request.body.liked).
+            then((resource_id) => response.status(201).send({ resource_id })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * PATCH {userRoutes}/ratings/:resource_id
+ *
+ * Updates a resource rating given by the user identified by the JWT
+ * sent in the request.
+ */
+userRoutes.patch(
+    '/ratings/:resource_id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.updateRating(request.body.user_email, request.params.resource_id, request.body.liked).
             then((resource_id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).send({ error }));
     });

@@ -119,3 +119,21 @@ CREATE TABLE IF NOT EXISTS marked (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 ) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS rating (
+  likeIt boolean NOT NULL,
+  lastModified DATE NOT NULL,
+  author_id int(5) NOT NULL,
+  resource_id int(5) NOT NULL,
+  PRIMARY KEY(author_id, resource_id),
+  INDEX author_ind (author_id),
+  INDEX resource_ind (resource_id),
+  FOREIGN KEY (author_id)
+    REFERENCES user(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (resource_id)
+    REFERENCES resources(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=INNODB;
