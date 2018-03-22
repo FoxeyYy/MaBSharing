@@ -1,0 +1,56 @@
+<div class="content mx-auto rounded my-4">
+  <form class="p-3">
+
+    <div class="form-group">
+      <label for="resourceName">Title</label>
+      <input type="text" class="form-control" id="resourceName" aria-describedby="resourceName" placeholder="Title" [(ngModel)]="title"
+        name="title">
+    </div>
+
+
+    <div class="row">
+      <div class="form-group col">
+        <label for="releaseDate">Release date</label>
+        <input type="date" [max]="today" class="form-control" id="releaseDate" aria-describedby="releaseDate" placeholder="2000-12-31"
+          [(ngModel)]="releaseDate" name="releaseDate">
+      </div>
+
+      <div class="form-group col">
+        <label for="resourceType">Resource type</label>
+        <select #resourceType class="form-control" id="resourceType" [(ngModel)]="type" name="type" required>
+          <option *ngFor="let typ of types" value="{{typ}}">{{typ}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="type === types[0]">
+      <div class="row">
+        <div class="form-group col">
+          <label for="bookEdition">Edition number</label>
+          <input type="number" min="1" class="form-control" id="bookEdition" aria-describedby="bookEdition" placeholder="1" [(ngModel)]="edition"
+            name="edition">
+        </div>
+
+        <div class="form-group col">
+          <label for="bookWriter">Writer</label>
+          <input type="text" class="form-control" id="bookWriter" aria-describedby="bookWriter" placeholder="Writer" [(ngModel)]="author"
+            name="author">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="type === types[1]">
+      <div class="form-group">
+        <label for="movieDirector">Director</label>
+        <input type="text" class="form-control" id="movieDirector" aria-describedby="movieDirector" placeholder="Director" [(ngModel)]="author"
+          name="author">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="create()">Create</button>
+    <span *ngIf="errMsg" class="alert alert-danger ml-1" role="alert">
+      {{errMsg}}
+    </span>
+
+  </form>
+</div>

@@ -13,6 +13,7 @@ import { MovieResolver } from './resource/movie-resolver.service';
 import { ErrorComponent } from './error/error.component';
 import { UserComponent } from './user/user.component';
 import { UserResolver } from './user/user-resolver.service';
+import { NewResourceComponent } from './new-resource/new-resource.component';
 
 const routes: Routes = [
   { path: '',
@@ -21,6 +22,7 @@ const routes: Routes = [
     children: [
       { path: '', component: WallComponent },
       { path: 'error', component: ErrorComponent},
+      { path: 'resource/new', component: NewResourceComponent},
       { 
         path: 'search',
         component: SearchComponent,

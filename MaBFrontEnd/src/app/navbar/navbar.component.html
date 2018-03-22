@@ -9,7 +9,8 @@
   <form #searchForm class="d-inline my-2 mx-lg-4 w-100" (mouseleave)="showSearches = false">
     <div class="search">
       <div class="input-group">
-        <input #searchBox class="form-control" type="search" placeholder="Search anything!" aria-label="Search" (keyup)="quickSearch(searchBox.value)" (click)="showSearches = true">
+        <input #searchBox class="form-control" type="search" placeholder="Search anything!" aria-label="Search" (keyup)="quickSearch(searchBox.value)"
+          (click)="showSearches = true">
         <span class="input-group-append">
           <button class="btn btn-outline-info" type="button" (click)="search(searchBox.value)">Search</button>
         </span>
@@ -40,8 +41,11 @@
     </div>
   </form>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div class="collapse navbar-collapse mx-auto" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/resource/new">New resource</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Wishlist</a>
       </li>
