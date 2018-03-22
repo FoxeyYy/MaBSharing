@@ -547,6 +547,22 @@ userRoutes.patch(
 
 
 /**
+ * GET {userRoutes}/:profile
+ *
+ * Returns the information about an user.
+ */
+userRoutes.get(
+    '/profile',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchUser(request.body.user_email).
+            then((user) => response.status(200).send({ user: { id: user.id, email: user.email } })).
+            catch((error) => response.status(500).end());
+    });
+
+
+/**
  * GET {userRoutes}/:id
  *
  * Returns the information about an user.
