@@ -621,6 +621,8 @@ const fetchBookById = (id) =>
  */
 const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
 {
+    let resource_id;
+
     return fetchUser(userEmail).
         then(
             (user) =>
@@ -640,6 +642,7 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                             then(
                                 (ids) =>
                                 {
+                                    resource_id = ids[0];
                                     return trx.
                                         returning('resource_id').
                                         insert(
@@ -651,11 +654,7 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                                         into('book');
                                 });
                     }).
-                    then(
-                        (inserts) =>
-                        {
-                            return inserts[0][0];
-                        });
+                    then(() => resource_id);
             });
 };
 
@@ -710,6 +709,8 @@ const fetchMovieById = (id) =>
  */
 const insertMovie = ({ name, releaseDate, userEmail, director }) =>
 {
+    let resource_id;
+
     return fetchUser(userEmail).
         then(
             (user) =>
@@ -729,6 +730,8 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
                             then(
                                 (ids) =>
                                 {
+                                    resource_id = ids[0];
+
                                     return trx.
                                         returning('resource_id').
                                         insert(
@@ -739,11 +742,7 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
                                         into('movie');
                                 });
                     }).
-                    then(
-                        (inserts) =>
-                        {
-                            return inserts[0][0];
-                        });
+                    then(() => resource_id);
             })
 };
 

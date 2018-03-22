@@ -638,7 +638,7 @@ resourceRoutes.post(
         };
 
         db.insertBook(book).
-            then((id) => response.status(201).send({ id })).
+            then((resource_id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).end());
     });
 
@@ -678,7 +678,7 @@ resourceRoutes.post(
         };
 
         db.insertMovie(movie).
-            then((id) => response.status(201).send({ id })).
+            then((resource_id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).end());
     });
 
