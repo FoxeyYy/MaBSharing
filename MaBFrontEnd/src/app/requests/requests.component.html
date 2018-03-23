@@ -1,0 +1,15 @@
+<div class="content mx-auto rounded my-4 list-group">
+  <h5 *ngIf="!requests.length" class="list-group-item list-group-item-success">All clear :D</h5>
+  <h5 *ngIf="requests.length" class="list-group-item list-group-item-success">{{requests.length}} pending requests</h5>
+  <div *ngFor="let request of requests" class="list-group-item">
+    {{request.authorId}}
+
+    <div class="float-right">
+      <span class="alert alert-danger mr-4" role="alert" *ngIf="errMsg && errId === request.authorId"> {{errMsg}} </span>
+      <button class="btn btn-outline-danger oi oi-x mr-1" title="Ignore" aria-hidden="true" (click)="ignoreRequest(request.authorId)">
+      Ignore</button>
+      <button class="btn btn-outline-success oi oi-check" title="Accept" aria-hidden="true" (click)="acceptRequest(request.authorId)">
+      Accept</button>
+    </div>
+  </div>
+</div>

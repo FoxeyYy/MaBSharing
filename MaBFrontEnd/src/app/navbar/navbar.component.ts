@@ -25,6 +25,7 @@ export class NavbarComponent implements OnInit {
   private searchTerms = new Subject<string>();
   private showSearches: boolean = false;
   private user: User;
+  private requestsNum: number = 0;
 
   constructor(
     private router: Router,
@@ -39,6 +40,12 @@ export class NavbarComponent implements OnInit {
     this.activeRoute.data.subscribe(
       (data: {results: User}) => {
         this.user = data.results;
+      }
+    );
+
+    this.userService.getFriendShipRequests().subscribe(
+      requests => {
+        this.requestsNum = requests.length;
       }
     );
 

@@ -59,12 +59,17 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
           {{user.email}}
+          <span *ngIf="requestsNum" class="badge badge-light">{{requestsNum}}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" routerLink="/user/{{user.id}}">Profile</a>
-          <a class="dropdown-item" routerLink="/requests">Requests</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="#" (click)="logout()">Logout</a>
+          <div class="oi">
+            <a class="oi-person dropdown-item " routerLink="/user/{{user.id}}"> Profile</a>
+            <a class="oi-inbox dropdown-item " routerLink="/requests"> Requests
+              <span *ngIf="requestsNum" class="badge badge-secondary">{{requestsNum}}</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item oi-account-logout" routerLink="#" (click)="logout()"> Logout</a>
+          </div>
         </div>
       </li>
     </ul>

@@ -4,6 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { HttpClient } from '@angular/common/http';
 import { User } from './User';
 import { tap, catchError, map } from 'rxjs/operators';
+import { FriendshipRequest } from './FriendshipRequest';
 
 @Injectable()
 export class UsersService {
@@ -65,6 +66,33 @@ export class UsersService {
       map(user => user["user"]),
       catchError(error => of({} as User))
     )
+  }
+
+  /**
+   * Retrieves pending friendship requests for the logged user.
+   */
+  getFriendShipRequests(): Observable<FriendshipRequest[]> {
+    return this.http.get<FriendshipRequest[]>(`${this.usersUrl}/friendship_requests`).pipe(
+      map(response => {
+        let requests: FriendshipRequest[] = [];
+      
+        for (let request of response["friendship_requests"]) {
+          requests.push({
+            authorId: +request
+          });
+        }
+
+        return requests;
+      }),
+      catchError(error => of([{authorId: -1}]))
+    );
+  }
+
+  dispatchFriendshipRequest(authorId: number, accept: boolean): Observable<number> {
+    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, {accepted: accept}).pipe(
+      map(response => response["id"]),
+      catchError(error => of(-1))
+    );
   }
 
 }

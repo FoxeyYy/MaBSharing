@@ -15,6 +15,8 @@ import { UserComponent } from './user/user.component';
 import { UserResolver } from './user/user-resolver.service';
 import { NewResourceComponent } from './new-resource/new-resource.component';
 import { CurrentUserResolver } from './navbar/current-user-resolver.service';
+import { RequestsComponent } from './requests/requests.component';
+import { RequestsResolver } from './requests/requests-resolver.service';
 
 const routes: Routes = [
   { path: '',
@@ -32,6 +34,13 @@ const routes: Routes = [
         component: SearchComponent,
         resolve: {
           results: SearchResolver
+        }
+      },
+      { 
+        path: 'requests',
+        component: RequestsComponent,
+        resolve: {
+          results: RequestsResolver
         }
       },
       { 
@@ -69,7 +78,8 @@ const routes: Routes = [
     BookResolver,
     MovieResolver,
     UserResolver,
-    CurrentUserResolver
+    CurrentUserResolver,
+    RequestsResolver
   ]
 })
 export class AppRoutingModule {}
