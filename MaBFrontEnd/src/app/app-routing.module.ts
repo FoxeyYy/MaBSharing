@@ -14,11 +14,15 @@ import { ErrorComponent } from './error/error.component';
 import { UserComponent } from './user/user.component';
 import { UserResolver } from './user/user-resolver.service';
 import { NewResourceComponent } from './new-resource/new-resource.component';
+import { CurrentUserResolver } from './navbar/current-user-resolver.service';
 
 const routes: Routes = [
   { path: '',
    component: HomeComponent,
     canActivate: [AuthGuard],
+    resolve: {
+      results: CurrentUserResolver
+    },
     children: [
       { path: '', component: WallComponent },
       { path: 'error', component: ErrorComponent},
@@ -64,7 +68,8 @@ const routes: Routes = [
     SearchResolver,
     BookResolver,
     MovieResolver,
-    UserResolver
+    UserResolver,
+    CurrentUserResolver
   ]
 })
 export class AppRoutingModule {}

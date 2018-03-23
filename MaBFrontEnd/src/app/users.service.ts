@@ -9,10 +9,26 @@ import { tap, catchError, map } from 'rxjs/operators';
 export class UsersService {
 
   private usersUrl = 'http://localhost:10011/user';
+  private currentEmail = '';
 
   constructor(
     private http: HttpClient
   ) { }
+
+  /**
+   * Saves current user's email.
+   * @param email of the current user.
+   */
+  saveCurrentUser(email: string) {
+    this.currentEmail = email;
+  }
+
+  /**
+   * Retrieves current user's email.
+   */
+  getCurrentUserEmail(): string {
+    return this.currentEmail;
+  }
 
   /**
    * Search users whose name contains search term.
@@ -36,6 +52,16 @@ export class UsersService {
    */
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.usersUrl}/${id}`).pipe(
+      map(user => user["user"]),
+      catchError(error => of({} as User))
+    )
+  }
+
+  /**
+   * Retrieves current user from the server.
+   */
+  getCurrentUserFromServer(): Observable<User> {
+    return this.http.get<User>(`${this.usersUrl}/profile`).pipe(
       map(user => user["user"]),
       catchError(error => of({} as User))
     )
