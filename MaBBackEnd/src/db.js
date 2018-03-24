@@ -183,6 +183,23 @@ const fetchFriendshipRequests = (userEmail) =>
 
 
 /**
+ * Returns whether there is already a friendship request between the
+ * given users.
+ *
+ * @param {number} origAuthorID
+ * @param {number} destAuthorID
+ *
+ * @returns (boolean) True if there is already a friendship request.
+ */
+const existsFriendshipRequest = (origAuthorID, destAuthorID) =>
+    db('friendrequest').
+        select('*').
+        where('orig_author_id', '=', origAuthorID).
+        andWhere('dest_author_id', '=', destAuthorID).
+        then((rows) => (rows.length > 0));
+
+
+/**
  * Adds a new friendship request from a user given its email address
  * towards another user given its id.
  *
@@ -195,15 +212,24 @@ const insertFriendshipRequest = (userEmail, destUserID) =>
     fetchUser(userEmail).
         then(
             (user) =>
-                db('friendrequest').
-                insert(
-                    {
-                        creation_date: new Date().toISOString().split('T')[0],
-                        review_date: null,
-                        accepted: null,
-                        orig_author_id: user.id,
-                        dest_author_id: destUserID,
-                    })).
+                Promise.all(
+                    [
+                        user,
+                        existsFriendshipRequest(destUserID, user.id),
+                    ])).
+        then(
+            ([user, crossedRequest]) =>
+                (crossedRequest) ?
+                    Promise.reject('Crossed friendship request') :
+                    db('friendrequest').
+                        insert(
+                            {
+                                creation_date: new Date().toISOString().split('T')[0],
+                                review_date: null,
+                                accepted: null,
+                                orig_author_id: user.id,
+                                dest_author_id: destUserID,
+                            })).
         then(() => destUserID);
 
 

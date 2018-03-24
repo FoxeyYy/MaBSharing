@@ -386,7 +386,7 @@ userRoutes.post(
     {
         db.insertFriendshipRequest(request.body.user_email, request.body.dest_user_id).
             then((id) => response.status(200).send({ id })).
-            catch((error) => response.status(500).end());
+            catch((error) => response.status(500).send({ error }));
     });
 
 
