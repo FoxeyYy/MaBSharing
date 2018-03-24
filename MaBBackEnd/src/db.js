@@ -176,10 +176,10 @@ const fetchFriendshipRequests = (userEmail) =>
         then(
             (user) =>
                 db('friendrequest').
-                    select('orig_author_id').
+                    select('friendrequest.orig_author_id', 'friendrequest.creation_date', 'user.email').
+                    innerJoin('user', 'friendrequest.orig_author_id', 'user.id').
                     whereNull('accepted').
-                    andWhere('dest_author_id', '=', user.id).
-                    then((rows) => rows.map(row => row['orig_author_id'])));
+                    andWhere('friendrequest.dest_author_id', '=', user.id));
 
 
 /**
