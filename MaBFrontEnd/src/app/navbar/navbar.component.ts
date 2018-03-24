@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { User } from '../User';
 import { Observable } from 'rxjs/Observable';
@@ -19,19 +19,36 @@ import { of } from 'rxjs/observable/of';
 })
 export class NavbarComponent implements OnInit {
 
+  private static readonly SEARCH_MIN = 4;
+
   private results$: Observable<User[] | Book[] | Movie[]>;
   private searchTerms = new Subject<string>();
-  private static readonly SEARCH_MIN = 4;
   private showSearches: boolean = false;
+  private user: User;
+  private requestsNum: number = 0;
 
   constructor(
     private router: Router,
+    private activeRoute: ActivatedRoute,
     private authService: AuthService,
     private userService: UsersService,
     private resourceService: ResourcesService
   ) { }
 
   ngOnInit() {
+
+    this.activeRoute.data.subscribe(
+      (data: {results: User}) => {
+        this.user = data.results;
+      }
+    );
+
+    this.userService.getFriendShipRequests().subscribe(
+      requests => {
+        this.requestsNum = requests.length;
+      }
+    );
+
     this.results$ = this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),

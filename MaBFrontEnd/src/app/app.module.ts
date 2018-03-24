@@ -21,6 +21,7 @@ import { ErrorComponent } from './error/error.component';
 import { ReversePipe } from './_pipes/ReversePipe';
 import { UserComponent } from './user/user.component';
 import { NewResourceComponent } from './new-resource/new-resource.component';
+import { RequestsComponent } from './requests/requests.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NewResourceComponent } from './new-resource/new-resource.component';
     ErrorComponent,
     ReversePipe,
     UserComponent,
-    NewResourceComponent
+    NewResourceComponent,
+    RequestsComponent
   ],
   imports: [
     BrowserModule,
