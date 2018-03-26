@@ -78,13 +78,15 @@ export class UsersService {
       
         for (let request of response["friendship_requests"]) {
           requests.push({
-            authorId: +request
+            authorId: +request["orig_author_id"],
+            authorEmail: request["email"],
+            creationDate: request["creation_date"]
           });
         }
 
         return requests;
       }),
-      catchError(error => of([{authorId: -1}]))
+      catchError(error => of([{authorId: -1} as FriendshipRequest]))
     );
   }
 
