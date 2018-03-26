@@ -90,6 +90,22 @@ export class UsersService {
     );
   }
 
+  /**
+   * Creates a new friend request.
+   * @param userId of the target user.
+   */
+  createFriendshipRequest(userId: number): Observable<number> {
+    return this.http.post<number>(`${this.usersUrl}/friendship_requests/`, {dest_user_id: userId}).pipe(
+      map(response => response["id"]),
+      catchError(error => of(-1))
+    );
+  }
+
+  /**
+   * Accepts or refueses a friend request.
+   * @param authorId id of the user who created the request.
+   * @param accept true to accept, false to refuse.
+   */
   dispatchFriendshipRequest(authorId: number, accept: boolean): Observable<number> {
     return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, {accepted: accept}).pipe(
       map(response => response["id"]),
