@@ -11,6 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 export class UserComponent implements OnInit {
 
   private user: User
+  private errMsg: string = '';
+  private added: boolean = false;
+  private currentUser: boolean = false;
 
   constructor(
     private userService: UsersService,
@@ -21,6 +24,7 @@ export class UserComponent implements OnInit {
     this.route.data.subscribe(
       (data: { results: User }) => {
         this.user = data.results;
+        this.currentUser = this.userService.getCurrentUserEmail() === this.user.email;
       }
     );
   }
@@ -29,7 +33,15 @@ export class UserComponent implements OnInit {
    * Sends a friend request to the current user
    */
   sendFriendRequest() {
-    //TODO
+    this.errMsg = '';
+    this.userService.createFriendshipRequest(this.user.id).subscribe(id => {
+      if (id === -1) {
+        this.errMsg = "Couldn't send request :(";
+        return;
+      }
+
+      this.added = true;
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { User } from '../User';
 import { Observable } from 'rxjs/Observable';
@@ -33,19 +33,23 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private userService: UsersService,
     private resourceService: ResourcesService
-  ) { }
+  ) { 
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.url !== '/login') {
+        this.userService.getFriendShipRequests().subscribe(
+          requests => {
+            this.requestsNum = requests.length;
+          }
+        );
+      }
+    });
+  }
 
   ngOnInit() {
 
     this.activeRoute.data.subscribe(
       (data: {results: User}) => {
         this.user = data.results;
-      }
-    );
-
-    this.userService.getFriendShipRequests().subscribe(
-      requests => {
-        this.requestsNum = requests.length;
       }
     );
 
