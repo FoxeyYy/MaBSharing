@@ -233,36 +233,36 @@ const insertFriendshipRequest = (userEmail, destUserID) =>
         then(() => destUserID);
 
 
-const acceptFriendshipRequest = (userEmail, destUserID) =>
+const acceptFriendshipRequest = (userEmail, origUserID) =>
     fetchUser(userEmail).
         then(
             (user) =>
                 db('friendrequest').
                     whereNull('accepted').
-                    andWhere('orig_author_id', '=', user.id).
-                    andWhere('dest_author_id', '=', destUserID).
+                    andWhere('orig_author_id', '=', origUserID).
+                    andWhere('dest_author_id', '=', user.id).
                     update(
                         {
                             review_date: new Date().toISOString().split('T')[0],
                             accepted: 1,
                         })).
-        then(() => destUserID);
+        then(() => origUserID);
 
 
-const denyFriendshipRequest = (userEmail, destUserID) =>
+const denyFriendshipRequest = (userEmail, origUserID) =>
     fetchUser(userEmail).
         then(
             (user) =>
                 db('friendrequest').
                     whereNull('accepted').
-                    andWhere('orig_author_id', '=', user.id).
-                    andWhere('dest_author_id', '=', destUserID).
+                    andWhere('orig_author_id', '=', origUserID).
+                    andWhere('dest_author_id', '=', user.id).
                     update(
                         {
                             review_date: new Date().toISOString().split('T')[0],
                             accepted: 0,
                         })).
-        then(() => destUserID);
+        then(() => origUserID);
 
 
 /**
