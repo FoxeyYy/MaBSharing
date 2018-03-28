@@ -10,8 +10,7 @@ export const TOKEN_NAME: string = 'jwt_token';
 @Injectable()
 export class AuthService {
 
-    //private authUrl = 'http://localhost:10011/auth';
-    private authUrl = 'http://192.168.98.3:10011/auth';
+    private authUrl = 'http://localhost:10011/auth';
     private jwtHelper: JwtHelper = new JwtHelper();
 
     constructor(private http: HttpClient) {

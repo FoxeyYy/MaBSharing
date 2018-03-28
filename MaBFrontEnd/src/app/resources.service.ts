@@ -11,7 +11,7 @@ import { Comment } from './Comment';
 @Injectable()
 export class ResourcesService {
 
-  private resourcesUrl = 'http://192.168.98.3:10011/resources';
+  private resourcesUrl = 'http://localhost:10011/resources';
 
   constructor(
     private http: HttpClient
@@ -64,6 +64,22 @@ export class ResourcesService {
   }
 
   /**
+   * Creates a book on the server.
+   * @param book to be created.
+   */
+  createBook(book: Book): Observable<number> {
+    return this.http.post<number>(`${this.resourcesUrl}/movie`, {
+      name: book.name,
+      release_date: book.releaseDate,
+      writer: book.writer,
+      edition: book.edition,
+    }).pipe(
+      map(id => id),
+      catchError(error => of(-1))
+    )
+  }
+
+  /**
    * Retrieves a movie from the server.
    * @param id of the movie.
    */
@@ -71,6 +87,21 @@ export class ResourcesService {
     return this.http.get<Book>(`${this.resourcesUrl}/movie/${id}`).pipe(
       map(movie => movie["movie"]),
       catchError(error => of({} as Movie))
+    )
+  }
+
+  /**
+   * Creates a movie on the server.
+   * @param movie to be created.
+   */
+  createMovie(movie: Movie): Observable<number> {
+    return this.http.post<number>(`${this.resourcesUrl}/movie`, {
+      name: movie.name,
+      release_date: movie.releaseDate,
+      director: movie.director,
+    }).pipe(
+      map(id => id),
+      catchError(error => of(-1))
     )
   }
 

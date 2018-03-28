@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-<<<<<<< HEAD
-import { Router } from '@angular/router';
-=======
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
->>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
 import { AuthService } from '../auth.service';
 import { User } from '../User';
 import { Observable } from 'rxjs/Observable';
@@ -23,13 +19,17 @@ import { of } from 'rxjs/observable/of';
 })
 export class NavbarComponent implements OnInit {
 
+  private static readonly SEARCH_MIN = 4;
+
   private results$: Observable<User[] | Book[] | Movie[]>;
   private searchTerms = new Subject<string>();
-  private static readonly SEARCH_MIN = 4;
-  private searchBarFocused: boolean = false;
+  private showSearches: boolean = false;
+  private user: User;
+  private requestsNum: number = 0;
 
   constructor(
     private router: Router,
+    private activeRoute: ActivatedRoute,
     private authService: AuthService,
     private userService: UsersService,
     private resourceService: ResourcesService
@@ -46,8 +46,6 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-<<<<<<< HEAD
-=======
 
     this.activeRoute.data.subscribe(
       (data: {results: User}) => {
@@ -55,7 +53,6 @@ export class NavbarComponent implements OnInit {
       }
     );
 
->>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
     this.results$ = this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -98,6 +95,7 @@ export class NavbarComponent implements OnInit {
  */
   search(term: string) {
     this.router.navigate(['/search', {term: term}]);
+    this.showSearches = false;
   }
 
   /**

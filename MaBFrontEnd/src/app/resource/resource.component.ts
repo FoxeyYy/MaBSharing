@@ -14,7 +14,7 @@ export class ResourceComponent implements OnInit {
   private resource: Resource
   private errorSubmitting: boolean = false
   private comment: string = ""
-  private comments: Comment[]
+  private comments: Comment[] = []
 
   constructor(
     private route: ActivatedRoute,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UsersService
   ) { }
 
   ngOnInit() {
@@ -34,6 +36,7 @@ export class LoginComponent implements OnInit {
           if (msg === "error") {
             this.errMsg = 'Wrong credentials';
           } else {
+            this.userService.saveCurrentUser(this.username);
             this.router.navigate(["/"]);
           }
         });
