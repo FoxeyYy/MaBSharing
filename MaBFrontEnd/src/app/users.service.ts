@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { User } from './User';
 import { tap, catchError, map } from 'rxjs/operators';
 import { FriendshipRequest } from './FriendshipRequest';
+import { Movie } from './Movie';
+import { Book } from './Book';
+import { Resource } from './Resource';
 
 @Injectable()
 export class UsersService {
@@ -111,6 +114,32 @@ export class UsersService {
       map(response => response["id"]),
       catchError(error => of(-1))
     );
+  }
+
+  /**
+   * Retrieves current logged user's wishlist from server.
+   */
+  getWishlist(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.usersUrl}/wishlist`).pipe(
+        map(json => {
+
+          var movies =new Array<Movie>();
+          json['wishlist']['movies'].forEach(element => {
+            movies.push(Object.assign(new Movie, element));
+          }); 
+
+          var books =new Array<Book>();
+          json['wishlist']['books'].forEach(element => {
+            books.push(Object.assign(new Book, element));
+          });
+
+          var result = new Array<Resource>();
+          result = result.concat(books);
+          result = result.concat(movies);  
+          
+          return result;
+        })
+      );
   }
 
 }

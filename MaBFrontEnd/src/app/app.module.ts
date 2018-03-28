@@ -22,6 +22,8 @@ import { ReversePipe } from './_pipes/ReversePipe';
 import { UserComponent } from './user/user.component';
 import { NewResourceComponent } from './new-resource/new-resource.component';
 import { RequestsComponent } from './requests/requests.component';
+import { WishListComponent } from './wish-list/wish-list.component';
+import { RecordsComponent } from './records/records.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { RequestsComponent } from './requests/requests.component';
     ReversePipe,
     UserComponent,
     NewResourceComponent,
-    RequestsComponent
+    RequestsComponent,
+    WishListComponent,
+    RecordsComponent
   ],
   imports: [
     BrowserModule,
