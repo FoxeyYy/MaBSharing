@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-signup',
@@ -18,8 +17,7 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private userService: UsersService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -42,7 +40,6 @@ export class SignupComponent implements OnInit {
         if(msg === "error") {
           this.errMsg = "User already in use";
         } else {
-          this.userService.saveCurrentUser(this.username);
           this.router.navigate(['/']);
         }
       });

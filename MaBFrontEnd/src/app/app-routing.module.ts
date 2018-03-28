@@ -11,43 +11,28 @@ import { ResourceComponent } from './resource/resource.component';
 import { BookResolver } from './resource/book-resolver.service';
 import { MovieResolver } from './resource/movie-resolver.service';
 import { ErrorComponent } from './error/error.component';
-import { UserComponent } from './user/user.component';
-import { UserResolver } from './user/user-resolver.service';
-import { NewResourceComponent } from './new-resource/new-resource.component';
-import { CurrentUserResolver } from './navbar/current-user-resolver.service';
-import { RequestsComponent } from './requests/requests.component';
-import { RequestsResolver } from './requests/requests-resolver.service';
+import { WishlistComponent } from './wishlist/wishlist.component';
+import { WishlistResolver } from './wishlist/wishlist-resolver.service';
 
 const routes: Routes = [
   { path: '',
    component: HomeComponent,
     canActivate: [AuthGuard],
-    resolve: {
-      results: CurrentUserResolver
-    },
     children: [
       { path: '', component: WallComponent },
       { path: 'error', component: ErrorComponent},
-      { path: 'resource/new', component: NewResourceComponent},
+      { 
+        path: 'wishlist',
+        component: WishlistComponent,
+        resolve: {
+          results: WishlistResolver
+        }
+      },
       { 
         path: 'search',
         component: SearchComponent,
         resolve: {
           results: SearchResolver
-        }
-      },
-      { 
-        path: 'requests',
-        component: RequestsComponent,
-        resolve: {
-          results: RequestsResolver
-        }
-      },
-      { 
-        path: 'user/:id',
-        component: UserComponent,
-        resolve: {
-          results: UserResolver
         }
       },
       { 
@@ -77,9 +62,7 @@ const routes: Routes = [
     SearchResolver,
     BookResolver,
     MovieResolver,
-    UserResolver,
-    CurrentUserResolver,
-    RequestsResolver
+    WishlistResolver
   ]
 })
 export class AppRoutingModule {}

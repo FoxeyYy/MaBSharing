@@ -1,0 +1,13 @@
+.list-group {
+    z-index: 1000;
+    position:absolute;
+    width:100%;
+}
+
+.search {
+    position: relative;
+}
+
+.nav-item {
+    white-space: nowrap;
+}

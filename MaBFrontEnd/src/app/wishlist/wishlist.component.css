@@ -1,0 +1,17 @@
+.card {
+    /*    border: 1px solid red;*/
+        width: 350px;
+}
+.single-card {
+        border: 1px solid black;
+        width: 250px;
+}
+.single-card-movie {
+        background-color: #f0f0f0;
+}
+.single-card-book {
+        background-color: #a0a0a0;
+}
+.point-card {
+        list-style-type: none;
+} 

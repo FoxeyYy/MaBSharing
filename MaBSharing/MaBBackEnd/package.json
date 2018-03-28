@@ -1,0 +1,41 @@
+{
+  "name": "MaBBackEnd",
+  "version": "0.0.0",
+  "description": "MaBSharing back end.",
+  "main": "src/index.js",
+  "scripts": {
+    "deps:install": "docker-compose -f docker-compose.install.yml up --build",
+    "docker:prune": "docker system prune -f && docker volume prune -f",
+    "dev:logs": "docker-compose -f docker-compose.dev.yml logs",
+    "dev:ps": "docker-compose -f docker-compose.dev.yml ps",
+    "dev:start": "npm run deps:install && docker-compose -f docker-compose.dev.yml up -d",
+    "dev:stop": "docker-compose -f docker-compose.dev.yml down -v",
+    "nuke": "npm run stop && npm run docker:prune",
+    "lint": "eslint src/ --cache",
+    "logs": "npm run dev:logs",
+    "ps": "npm run dev:ps",
+    "start": "npm run dev:start",
+    "stop": "npm run dev:stop",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "@angular/cli": "^1.7.3",
+    "eslint": "^4.18.0",
+    "nodemon": "^1.15.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "express-winston": "^2.5.0",
+    "jsonwebtoken": "^8.1.1",
+    "knex": "^0.14.4",
+    "mariasql": "^0.2.6",
+    "npm": "^5.7.1",
+    "winston": "^2.4.0"
+  }
+}
