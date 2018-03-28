@@ -68,13 +68,13 @@ export class ResourcesService {
    * @param book to be created.
    */
   createBook(book: Book): Observable<number> {
-    return this.http.post<number>(`${this.resourcesUrl}/movie`, {
+    return this.http.post<number>(`${this.resourcesUrl}/book`, {
       name: book.name,
       release_date: book.releaseDate,
       writer: book.writer,
       edition: book.edition,
     }).pipe(
-      map(id => id),
+      map(id => id["resource_id"]),
       catchError(error => of(-1))
     )
   }
@@ -100,7 +100,7 @@ export class ResourcesService {
       release_date: movie.releaseDate,
       director: movie.director,
     }).pipe(
-      map(id => id),
+      map(id => id["resource_id"]),
       catchError(error => of(-1))
     )
   }
