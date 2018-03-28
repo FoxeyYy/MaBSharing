@@ -2,7 +2,8 @@
   <h5 *ngIf="!requests.length" class="list-group-item list-group-item-success">All clear :D</h5>
   <h5 *ngIf="requests.length" class="list-group-item list-group-item-success">{{requests.length}} pending requests</h5>
   <div *ngFor="let request of requests" class="list-group-item">
-    {{request.authorId}}
+
+    <a routerLink="/user/{{request.authorId}}">{{request.authorEmail}}</a> on {{request.creationDate | date}}
 
     <div class="float-right">
       <span class="alert alert-danger mr-4" role="alert" *ngIf="errMsg && errId === request.authorId"> {{errMsg}} </span>

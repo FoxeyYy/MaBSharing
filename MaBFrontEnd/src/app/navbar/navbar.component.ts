@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+<<<<<<< HEAD
 import { Router } from '@angular/router';
+=======
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+>>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
 import { AuthService } from '../auth.service';
 import { User } from '../User';
 import { Observable } from 'rxjs/Observable';
@@ -29,9 +33,29 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private userService: UsersService,
     private resourceService: ResourcesService
-  ) { }
+  ) { 
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.url !== '/login') {
+        this.userService.getFriendShipRequests().subscribe(
+          requests => {
+            this.requestsNum = requests.length;
+          }
+        );
+      }
+    });
+  }
 
   ngOnInit() {
+<<<<<<< HEAD
+=======
+
+    this.activeRoute.data.subscribe(
+      (data: {results: User}) => {
+        this.user = data.results;
+      }
+    );
+
+>>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
     this.results$ = this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),

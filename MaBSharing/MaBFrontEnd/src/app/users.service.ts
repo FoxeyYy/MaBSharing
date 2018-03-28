@@ -12,8 +12,7 @@ import { Movie } from './Movie';
 @Injectable()
 export class UsersService {
 
-  //private usersUrl = 'http://localhost:10011/user';
-  private usersUrl = 'http://192.168.98.3:10011/user';
+  private usersUrl = 'http://localhost:10011/user';
 
   private currentEmail = '';
 

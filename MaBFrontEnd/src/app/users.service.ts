@@ -44,11 +44,28 @@ export class UsersService {
             movies.push(Object.assign(new Movie, element));
           }); 
 
+<<<<<<< HEAD
           var books =new Array<Book>();
           json['wishlist']['books'].forEach(element => {
             books.push(Object.assign(new Book, element));
+=======
+  /**
+   * Retrieves pending friendship requests for the logged user.
+   */
+  getFriendShipRequests(): Observable<FriendshipRequest[]> {
+    return this.http.get<FriendshipRequest[]>(`${this.usersUrl}/friendship_requests`).pipe(
+      map(response => {
+        let requests: FriendshipRequest[] = [];
+      
+        for (let request of response["friendship_requests"]) {
+          requests.push({
+            authorId: +request["orig_author_id"],
+            authorEmail: request["email"],
+            creationDate: request["creation_date"]
+>>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
           });
 
+<<<<<<< HEAD
           var result = new Array<Resource>();
           result = result.concat(books);
           result = result.concat(movies);  
@@ -56,6 +73,35 @@ export class UsersService {
           return result;
         })
       );
+=======
+        return requests;
+      }),
+      catchError(error => of([{authorId: -1} as FriendshipRequest]))
+    );
+  }
+
+  /**
+   * Creates a new friend request.
+   * @param userId of the target user.
+   */
+  createFriendshipRequest(userId: number): Observable<number> {
+    return this.http.post<number>(`${this.usersUrl}/friendship_requests/`, {dest_user_id: userId}).pipe(
+      map(response => response["id"]),
+      catchError(error => of(-1))
+    );
+  }
+
+  /**
+   * Accepts or refueses a friend request.
+   * @param authorId id of the user who created the request.
+   * @param accept true to accept, false to refuse.
+   */
+  dispatchFriendshipRequest(authorId: number, accept: boolean): Observable<number> {
+    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, {accepted: accept}).pipe(
+      map(response => response["id"]),
+      catchError(error => of(-1))
+    );
+>>>>>>> 4460ddbbe40b01753239975b6cb4a1ce35617ca2
   }
 
 }
