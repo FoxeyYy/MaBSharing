@@ -3,7 +3,7 @@
 --
 
 INSERT INTO
-    user (id, email, password, creationDate)
+    user (id, email, password, creation_date)
 VALUES
     (1, 'hector@email.com', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
     (2, 'raul@email.com', '$2a$10$/fji/bbJEXWG9coxcx47jeSQPak5NySs.28W5MmV4k.B0aU2L2BGu', '2018-03-07'),
@@ -32,7 +32,7 @@ VALUES
 --
 
 INSERT INTO
-    resources (id, name, creationDate, releaseDate, author_id)
+    resources (id, name, creation_date, release_date, author_id)
 VALUES
     (1, 'Blade Runnner 2049', '2018-03-07', '2017-10-06', 1),
     (2, 'Inception', '2018-03-07', '2010-07-16', 4),
@@ -62,7 +62,7 @@ VALUES
     (1, 'J. R. R. Tolkien', 9);
 
 INSERT INTO
-    comment (creationDate, author_id, resource_id, comment)
+    comment (creation_date, author_id, resource_id, comment)
 VALUES
     ('2018-03-11', 1, 1, '🚀'),
     ('2018-03-11', 2, 1, '👏'),
@@ -76,33 +76,33 @@ VALUES
 --
 
 INSERT INTO
-    wishlist (author_id, resource_id)
+    wishlist (author_id, resource_id, last_modified)
 VALUES
-    (1, 1),
-    (1, 6),
-    (1, 8),
-    (2, 7),
-    (2, 8),
-    (4, 9),
-    (5, 2),
-    (5, 5),
-    (6, 7);
+    (1, 1, '2018-03-18'),
+    (1, 6, '2018-03-27'),
+    (1, 8, '2018-03-23'),
+    (2, 7, '2018-03-22'),
+    (2, 8, '2018-03-22'),
+    (4, 9, '2018-03-26'),
+    (5, 2, '2018-03-25'),
+    (5, 5, '2018-03-25'),
+    (6, 7, '2018-03-20');
 
 INSERT INTO
-    marked (author_id, resource_id)
+    marked (author_id, resource_id, last_modified)
 VALUES
-    (1, 2),
-    (1, 4),
-    (1, 9),
-    (2, 1),
-    (2, 2),
-    (3, 7),
-    (3, 8),
-    (5, 4),
-    (6, 6);
+    (1, 2, '2018-03-20'),
+    (1, 4, '2018-03-19'),
+    (1, 9, '2018-03-22'),
+    (2, 1, '2018-03-23'),
+    (2, 2, '2018-03-26'),
+    (3, 7, '2018-03-24'),
+    (3, 8, '2018-03-23'),
+    (5, 4, '2018-03-18'),
+    (6, 6, '2018-03-21');
 
 INSERT INTO
-    rating (likeIt, lastModified, author_id, resource_id)
+    rating (like_it, last_modified, author_id, resource_id)
 VALUES
     (0, '2018-03-17', 1, 2),
     (0, '2018-03-15', 1, 3),

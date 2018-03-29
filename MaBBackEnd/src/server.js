@@ -327,15 +327,34 @@ const userRoutes = express.Router();
 /**
  * GET {userRoutes}/events
  *
- * Returns the events related to the user identified by the JWT sent in
- * the request.
+ * Returns the events related to the friends of the user identified by
+ * the JWT sent in * the request.
  */
 userRoutes.get(
     '/events',
     ensureAuthenticated,
     (request, response) =>
     {
-        response.status(501).end();
+        db.fetchFriendsEvents(request.body.user_email).
+            then((events) => response.status(200).send({ events })).
+            catch((error) => response.status(500).send({ error }));
+    });
+
+
+/**
+ * GET {userRoutes}/events/:user_id
+ *
+ * Returns the events related to the user identified by the JWT sent in
+ * the request.
+ */
+userRoutes.get(
+    '/events/:user_id',
+    ensureAuthenticated,
+    (request, response) =>
+    {
+        db.fetchEventsByUserID(request.params.user_id).
+            then((events) => response.status(200).send({ events })).
+            catch((error) => response.status(500).send({ error }));
     });
 
 
@@ -456,7 +475,7 @@ userRoutes.post(
     (request, response) =>
     {
         db.insertOnWishList(request.body.user_email, request.body.id).
-            then((id) => response.status(201).send({ resource_id })).
+            then((resource_id) => response.status(201).send({ resource_id })).
             catch((error) => response.status(500).send({ error }));
     });
 

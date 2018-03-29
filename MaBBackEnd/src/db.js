@@ -54,7 +54,7 @@ const db =
 const fetchUserById = (id) =>
 {
     return db.
-        select('id', 'email', 'creationDate').
+        select('id', 'email', 'creation_date').
         from('user').
         where({ id }).
         then(
@@ -112,7 +112,7 @@ const insertUser = (email, password) =>
             {
                 email,
                 password,
-                creationDate: new Date().toISOString().split('T')[0]
+                creation_date: new Date().toISOString().split('T')[0]
             });
 };
 
@@ -124,7 +124,7 @@ const insertUser = (email, password) =>
  * @returns {Promise} Resolves to search results array.
  */
 const searchUsers = (term) =>
-    db.select('id', 'email', 'creationDate').
+    db.select('id', 'email', 'creation_date').
         from('user').
         whereRaw(`MATCH(user.email) AGAINST ('${term}')`);
 
@@ -283,7 +283,7 @@ const fetchResourcesOnWishList = (userID) =>
  */
 const fetchBooksOnWishList = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        select('resource_id', 'name', 'release_date', 'edition', 'writer').
         innerJoin('book', 'resources.id', 'book.resource_id').
         where('resources.id', 'in', fetchResourcesOnWishList(userID));
 
@@ -295,7 +295,7 @@ const fetchBooksOnWishList = (userID) =>
  */
 const fetchMoviesOnWishList = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'director').
+        select('resource_id', 'name', 'release_date', 'director').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
         where('resources.id', 'in', fetchResourcesOnWishList(userID));
 
@@ -334,8 +334,13 @@ const insertOnWishList = (userEmail, resourceID) =>
                         {
                             author_id: user.id,
                             resource_id: resourceID,
+                            last_modified: new Date().toISOString().split('T')[0],
                         }).
-                    then(() => resourceID));
+                    then(
+                        () =>
+                        {
+                            return resourceID
+                        }));
 
 /**
  * Returns the resources ids marked as read/seen by a user.
@@ -354,7 +359,7 @@ const fetchResourcesMarked = (userID) =>
  */
 const fetchBooksRead = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        select('resource_id', 'name', 'release_date', 'edition', 'writer').
         innerJoin('book', 'resources.id', 'book.resource_id').
         where('resources.id', 'in', fetchResourcesMarked(userID));
 
@@ -366,7 +371,7 @@ const fetchBooksRead = (userID) =>
  */
 const fetchMoviesSeen = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'director').
+        select('resource_id', 'name', 'release_date', 'director').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
         where('resources.id', 'in', fetchResourcesMarked(userID));
 
@@ -387,7 +392,6 @@ const fetchMarkedList = (userEmail) =>
                         fetchBooksRead(user.id),
                         fetchMoviesSeen(user.id),
                     ])).
-        // then(([books, movies]) => ({ books, movies }));
         then(
             ([books, movies]) => ({ books, movies }));
 
@@ -409,6 +413,7 @@ const insertOnMarkedList = (userEmail, resourceID) =>
                         {
                             author_id: user.id,
                             resource_id: resourceID,
+                            last_modified: new Date().toISOString().split('T')[0],
                         }).
                     then(() => resourceID));
 
@@ -423,7 +428,7 @@ const fetchResourcesDisliked = (userID) =>
     db('rating').
         select('resource_id').
         where('author_id', '=', userID).
-        andWhere('likeIt', '=', '0');
+        andWhere('like_it', '=', '0');
 
 /**
  * Returns the resources ids liked by a user.
@@ -435,7 +440,7 @@ const fetchResourcesLiked = (userID) =>
     db('rating').
         select('resource_id').
         where('author_id', '=', userID).
-        andWhere('likeIt', '=', '1');
+        andWhere('like_it', '=', '1');
 
 /**
  * Returns the books disliked by a user.
@@ -445,7 +450,7 @@ const fetchResourcesLiked = (userID) =>
  */
 const fetchBooksDisliked = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        select('resource_id', 'name', 'release_date', 'edition', 'writer').
         innerJoin('book', 'resources.id', 'book.resource_id').
         where('resources.id', 'in', fetchResourcesDisliked(userID));
 
@@ -457,7 +462,7 @@ const fetchBooksDisliked = (userID) =>
  */
 const fetchBooksLiked = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'edition', 'writer').
+        select('resource_id', 'name', 'release_date', 'edition', 'writer').
         innerJoin('book', 'resources.id', 'book.resource_id').
         where('resources.id', 'in', fetchResourcesLiked(userID));
 
@@ -484,7 +489,7 @@ const fetchBooksRated = (userID) =>
  */
 const fetchMoviesDisliked = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'director').
+        select('resource_id', 'name', 'release_date', 'director').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
         where('resources.id', 'in', fetchResourcesDisliked(userID));
 
@@ -496,7 +501,7 @@ const fetchMoviesDisliked = (userID) =>
  */
 const fetchMoviesLiked = (userID) =>
     db.from('resources').
-        select('resource_id', 'name', 'releaseDate', 'director').
+        select('resource_id', 'name', 'release_date', 'director').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
         where('resources.id', 'in', fetchResourcesLiked(userID));
 
@@ -551,8 +556,8 @@ const insertOnRatedList = (userEmail, resourceID, liked) =>
                 db('rating').
                     insert(
                         {
-                            likeIt: (liked) ? 1 : 0,
-                            lastModified: new Date().toISOString().split('T')[0],
+                            like_it: (liked) ? 1 : 0,
+                            last_modified: new Date().toISOString().split('T')[0],
                             author_id: user.id,
                             resource_id: resourceID,
                         }).
@@ -577,10 +582,308 @@ const updateRating = (userEmail, resourceID, liked) =>
                     andWhere('resource_id', '=', resourceID).
                     update(
                         {
-                            likeIt: (liked) ? 1 : 0,
-                            lastModified: new Date().toISOString().split('T')[0],
+                            like_it: (liked) ? 1 : 0,
+                            last_modified: new Date().toISOString().split('T')[0],
                         })).
         then(() => resourceID);
+
+
+/**
+ * Size in days of the time window used to consider an event as recent.
+ *
+ * @constant
+ * @type {number}
+ */
+const TIME_WINDOW = 30;
+
+
+/**
+ * Returns the comments recently posted by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent comments sorted by date.
+ */
+const fetchUserRecentComments = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('comment').
+        where('author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the ratings recently made by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent ratings sorted by date.
+ */
+const fetchUserRecentRatings = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('rating').
+        where('author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
+        orderBy('last_modified');
+
+/**
+ * Returns the friendship requests made recently to a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent friendship requests sorted by date.
+ */
+const fetchUserRecentFriendshipRequestsReceived = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        whereNull('accepted').
+        andWhere('dest_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the friendship requests accepted recently by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent accepted friendships sorted by date.
+ */
+const fetchUserRecentAcceptedFriendshipsReceived = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        where('accepted', '=', '1').
+        andWhere('dest_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the friendship requests rejected recently by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent rejected friendships sorted by date.
+ */
+const fetchUserRecentRejectedFriendshipsReceived = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        where('accepted', '=', '0').
+        andWhere('dest_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the friendship requests made recently by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent friendship requests sorted by date.
+ */
+const fetchUserRecentFriendshipRequestsSent = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        whereNull('accepted').
+        andWhere('orig_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the friendship requests sent recently by a user given its id
+ * and accepted by the recipient.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent accepted friendships sorted by date.
+ */
+const fetchUserRecentAcceptedFriendshipsSent = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        where('accepted', '=', '1').
+        andWhere('orig_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+/**
+ * Returns the friendship requests sent recently by a user given its id
+ * and rejected by the recipient.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent rejected friendships sorted by date.
+ */
+const fetchUserRecentRejectedFriendshipsSent = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('friendrequest').
+        where('accepted', '=', '0').
+        andWhere('orig_author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date');
+
+
+/**
+ * Returns the resources marked as seen/read recently by a user given
+ * its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent marked resources sorted by date.
+ */
+const fetchUserRecentMarkedResources = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('marked').
+        where('author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
+        orderBy('last_modified');
+
+
+/**
+ * Returns the resources added recently to the wish list by a user given
+ * its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent resources added to the with list sorted by date.
+ */
+const fetchUserRecentResourcesOnWishlist = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('wishlist').
+        where('author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
+        orderBy('last_modified');
+
+
+/**
+ * Returns the recent events related to a user given its ID as an array
+ * sorted by the timestamp of the event.
+ *
+ * The events returned are:
+ *
+ *   - New comments
+ *   - New ratings
+ *   - Friendship requests made to the user
+ *   - Friendship requests accepted by the user
+ *   - Friendship requests rejected by the user
+ *   - Friendship requests made by the user
+ *   - Friendship requests from the user accepted by the recipient
+ *   - Friendship requests from the user rejected by the recipient
+ *   - Resources marked as seen
+ *   - Resources added to the whish list
+ *
+ * @param {number} userID
+ * @returns {Promise<array>} Events related to a user given its ID.
+ */
+const fetchEventsByUserID = (userID) =>
+{
+    return Promise.
+        all(
+            [
+                fetchUserRecentComments(userID),
+                fetchUserRecentRatings(userID),
+                fetchUserRecentFriendshipRequestsReceived(userID),
+                fetchUserRecentAcceptedFriendshipsReceived(userID),
+                fetchUserRecentRejectedFriendshipsReceived(userID),
+                fetchUserRecentFriendshipRequestsSent(userID),
+                fetchUserRecentAcceptedFriendshipsSent(userID),
+                fetchUserRecentRejectedFriendshipsSent(userID),
+                fetchUserRecentMarkedResources(userID),
+                fetchUserRecentResourcesOnWishlist(userID),
+            ]).
+        then(
+            (
+                [
+                    comments,
+                    ratings,
+                    friendshipRequestsReceived,
+                    acceptedFriendshipsReceived,
+                    rejectedFriendshipsReceived,
+                    friendshipRequestsSent,
+                    acceptedFriendshipsSent,
+                    rejectedFriendshipsSent,
+                    marked,
+                    wishlist,
+                ]) =>
+            {
+                const events =
+                    Array.prototype.
+                        concat(
+                            comments.map(e => Object.assign(e, { 'event': 'comment', 'timestamp': e['creation_date'] })),
+                            ratings.map(e => Object.assign(e, { 'event': 'rating', 'timestamp': e['last_modified'] })),
+                            friendshipRequestsReceived.map(e => Object.assign(e, { 'event': 'friendship_request_received', 'timestamp': e['creation_date'] })),
+                            acceptedFriendshipsReceived.map(e => Object.assign(e, { 'event': 'accepted_friendship_received', 'timestamp': e['review_date'] })),
+                            rejectedFriendshipsReceived.map(e => Object.assign(e, { 'event': 'rejected_friendship_received', 'timestamp': e['review_date'] })),
+                            friendshipRequestsSent.map(e => Object.assign(e, { 'event': 'friendship_request_sent', 'timestamp': e['creation_date'] })),
+                            acceptedFriendshipsSent.map(e => Object.assign(e, { 'event': 'accepted_friendship_sent', 'timestamp': e['review_date'] })),
+                            rejectedFriendshipsSent.map(e => Object.assign(e, { 'event': 'rejected_friendship_sent', 'timestamp': e['review_date'] })),
+                            marked.map(e => Object.assign(e, { 'event': 'marked', 'timestamp': e['last_modified'] })),
+                            wishlist.map(e => Object.assign(e, { 'event': 'wishlist', 'timestamp': e['last_modified'] })),
+                        ).
+                        sort((a, b) => a['timestamp'] < b['timestamp'] ? -1 : 1);
+                return events;
+            });
+};
+
+
+/**
+ * Returns the recent events related to the friends of a user given its
+ * email address.
+ *
+ * The events are returned as a map with the key being the user id and
+ * the value the events as an array sorted by the timestamp of the
+ * event.
+ *
+ * The events returned are:
+ *
+ *   - New comments
+ *   - New ratings
+ *   - Friendship requests made to the user
+ *   - Friendship requests accepted by the user
+ *   - Friendship requests rejected by the user
+ *   - Friendship requests made by the user
+ *   - Friendship requests from the user accepted by the recipient
+ *   - Friendship requests from the user rejected by the recipient
+ *   - Resources marked as seen
+ *   - Resources added to the whish list
+ *
+ * @param {number} userID
+ * @returns {Promise<object>} Events related to the friends a user given its email address.
+ */
+const fetchFriendsEvents = (userEmail) =>
+    fetchFriends(userEmail).
+        then(
+            (friends) =>
+            {
+                // return friends.reduce(
+                //     (acc, friend_id) =>
+                //     {
+                //         return Object.assign(
+                //             acc,
+                //             {
+                //                 friend_id: fetchEventsByUserID(friend_id),
+                //             });
+                //     },
+                //     {});
+                return Promise.all([friends].concat(friends.map(fetchEventsByUserID)));
+            }).
+            then(
+                (result) =>
+                {
+                    // return result;
+                    const ids = result[0];
+                    const events = result.slice(1);
+                    return result[0].reduce(
+                        (acc, friend_id, idx) =>
+                        {
+                            return Object.assign(
+                                acc,
+                                {
+                                    [friend_id]: events[idx],
+                                });
+                        },
+                        {});
+                });
 
 
 
@@ -620,8 +923,8 @@ const fetchBookById = (id) =>
                         {
                             id: rows[0].id,
                             name: rows[0].name,
-                            releaseDate: rows[0].releaseDate,
-                            creationDate: rows[0].creationDate,
+                            release_date: rows[0].release_date,
+                            creation_date: rows[0].creation_date,
                             edition: rows[0].edition,
                             author: rows[0].author_id,
                             writer: rows[0].writer,
@@ -660,8 +963,8 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                             insert(
                                 {
                                     name,
-                                    creationDate: new Date().toISOString().split('T')[0],
-                                    releaseDate,
+                                    creation_date: new Date().toISOString().split('T')[0],
+                                    release_date: releaseDate,
                                     author_id: user.id,
                                 }).
                             into('resources').
@@ -710,8 +1013,8 @@ const fetchMovieById = (id) =>
                         {
                             id: rows[0].id,
                             name: rows[0].name,
-                            creationDate: rows[0].creationDate,
-                            releaseDate: rows[0].releaseDate,
+                            creation_date: rows[0].creation_date,
+                            release_date: rows[0].release_date,
                             author: rows[0].author_id,
                             director: rows[0].director,
                         });
@@ -748,8 +1051,8 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
                             insert(
                                 {
                                     name,
-                                    creationDate: new Date().toISOString().split('T')[0],
-                                    releaseDate,
+                                    creation_date: new Date().toISOString().split('T')[0],
+                                    release_date: releaseDate,
                                     author_id: user.id,
                                 }).
                             into('resources').
@@ -808,7 +1111,7 @@ const insertComment = (userEmail, resourceID, comment) =>
                 db('comment').
                     insert(
                         {
-                            creationDate: new Date().toISOString().split('T')[0],
+                            creation_date: new Date().toISOString().split('T')[0],
                             author_id: user.id,
                             resource_id: resourceID,
                             comment,
@@ -845,7 +1148,7 @@ const fetchRatings = (resourceID) =>
  * @returns {Promise} Resolves to search results array.
  */
 const searchBooks = (term) =>
-    db.select('id', 'name', 'creationDate', 'releaseDate' , 'edition', 'writer').
+    db.select('id', 'name', 'creation_date', 'release_date' , 'edition', 'writer').
         from('resources').
         innerJoin('book', 'resources.id', 'book.resource_id').
         whereRaw(`MATCH(resources.name) AGAINST ('${term}')`).
@@ -859,7 +1162,7 @@ const searchBooks = (term) =>
  * @returns {Promise} Resolves to search results array.
  */
 const searchMovies = (term) =>
-    db.select('id', 'name', 'creationDate', 'releaseDate' , 'director').
+    db.select('id', 'name', 'creation_date', 'release_date' , 'director').
         from('resources').
         innerJoin('movie', 'resources.id', 'movie.resource_id').
         whereRaw(`MATCH(resources.name) AGAINST ('${term}')`).
@@ -897,6 +1200,9 @@ module.exports = {
     fetchUser,
 
     searchUsers,
+
+    fetchEventsByUserID,
+    fetchFriendsEvents,
 
     fetchFriends,
     fetchFriendshipRequests,
