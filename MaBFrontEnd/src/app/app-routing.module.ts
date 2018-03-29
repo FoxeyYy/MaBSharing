@@ -17,6 +17,8 @@ import { NewResourceComponent } from './new-resource/new-resource.component';
 import { CurrentUserResolver } from './navbar/current-user-resolver.service';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsResolver } from './requests/requests-resolver.service';
+import { WishListComponent } from './wish-list/wish-list.component';
+import { WishListResolver } from './wish-list/wish-list-resolver.service';
 
 const routes: Routes = [
   { path: '',
@@ -29,6 +31,13 @@ const routes: Routes = [
       { path: '', component: WallComponent },
       { path: 'error', component: ErrorComponent},
       { path: 'resource/new', component: NewResourceComponent},
+      { 
+        path: 'wishlist',
+        component: WishListComponent,
+        resolve: {
+          results: WishListResolver
+        }
+      },
       { 
         path: 'search',
         component: SearchComponent,
@@ -79,7 +88,8 @@ const routes: Routes = [
     MovieResolver,
     UserResolver,
     CurrentUserResolver,
-    RequestsResolver
+    RequestsResolver,
+    WishListResolver
   ]
 })
 export class AppRoutingModule {}
