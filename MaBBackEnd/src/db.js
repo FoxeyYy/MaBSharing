@@ -899,39 +899,102 @@ const fetchFriendsEvents = (userEmail) =>
 
 
 /**
- * Fetches a book from the database given its id.
+ * Select a rating given the ID of the rated resource and the ID of the
+ * user who rated the resource.
  *
- * @param {number} id
- * @returns {object} Matching book.
+ * @param {number} resourceID
+ * @param {number} authorID
+ *
+ * @return {object} Rating.
  */
-const fetchBookById = (id) =>
-{
-    return db.
-        from('resources').
-        where('id', id).
-        innerJoin('book', 'resources.id', 'book.resource_id').
+const selectRating = (resourceID, authorID) =>
+    db.from('rating').
+        column('like_it', { 'rating_last_modified': 'last_modified' }).
+        where('resource_id', resourceID).
+        andWhere('author_id', authorID).
         then(
             (rows) =>
-            {
-                if (rows.length == 0)
-                {
-                    return ({});
-                }
-                else
-                {
-                    return (
-                        {
-                            id: rows[0].id,
-                            name: rows[0].name,
-                            release_date: rows[0].release_date,
-                            creation_date: rows[0].creation_date,
-                            edition: rows[0].edition,
-                            author: rows[0].author_id,
-                            writer: rows[0].writer,
-                        });
-                }
-            });
-};
+                rows[0] ?
+                    rows[0] :
+                    { like_it: null, rating_last_modified: null });
+
+
+/**
+ * Select whether a resource is marked given the ID of the marked
+ * resource and the ID of the user who marked the resource.
+ *
+ * @param {number} resourceID
+ * @param {number} authorID
+ *
+ * @return {object} Mark.
+ */
+const selectMark = (resourceID, authorID) =>
+db.from('marked').
+    column({ 'mark_last_modified': 'last_modified' }).
+    where('resource_id', resourceID).
+    andWhere('author_id', authorID).
+    then(
+        (rows) =>
+            rows[0] ?
+                Object.assign({ marked: true }, rows[0]) :
+                { marked: false, marked_last_modified: null });
+
+
+/**
+ * Select whether a resource is on the wish list of a user given the ID
+ * of the resource and the ID of the user.
+ *
+ * @param {number} resourceID
+ * @param {number} authorID
+ *
+ * @return {object} Is on the wish list?.
+ */
+const selectWishlist = (resourceID, authorID) =>
+db.from('wishlist').
+    column({ 'wishlist_last_modified': 'last_modified' }).
+    where('resource_id', resourceID).
+    andWhere('author_id', authorID).
+    then(
+        (rows) =>
+            rows[0] ?
+                Object.assign({ on_wishlist: true }, rows[0]) :
+                { on_wishlist: false, wishlist_last_modified: null });
+
+
+/**
+ * Select a book from the database given its id.
+ *
+ * @param {number} resourceID
+ * @returns {object} Matching book.
+ */
+const selectBookById = (resourceID) =>
+    db.from('resources').
+        where('id', resourceID).
+        innerJoin('book', 'resources.id', 'book.resource_id').
+        then((rows) => rows[0] ? rows[0] : {});
+
+
+/**
+ * Fetch a book from the database given its id together with its
+ * information related to a user given its email address.
+ *
+ * @param {number} resourceID
+ * @param {string} userEmail
+ *
+ * @returns {object} Matching book and info.
+ */
+const fetchBookById = (resourceID, userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                Promise.all(
+                    [
+                        selectBookById(resourceID),
+                        selectRating(resourceID, user.id),
+                        selectMark(resourceID, user.id),
+                        selectWishlist(resourceID, user.id),
+                    ])).
+        then((result) => Object.assign(...result));
 
 
 /**
@@ -989,38 +1052,74 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
 
 
 /**
+ * Select a movie from the database given its id.
+ *
+ * @param {number} resourceID
+ * @returns {object} Matching movie.
+ */
+const selectMovieById = (resourceID) =>
+    db.from('resources').
+        where('id', resourceID).
+        innerJoin('movie', 'resources.id', 'movie.resource_id').
+        then((rows) => rows[0] ? rows[0] : {});
+
+
+/**
+ * Fetch a movie from the database given its id together with its
+ * information related to a user given its email address.
+ *
+ * @param {number} resourceID
+ * @param {string} userEmail
+ *
+ * @returns {object} Matching movie and info.
+ */
+const fetchMovieById = (resourceID, userEmail) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                Promise.all(
+                    [
+                        selectMovieById(resourceID),
+                        selectRating(resourceID, user.id),
+                        selectMark(resourceID, user.id),
+                        selectWishlist(resourceID, user.id),
+                    ])).
+        then((result) => Object.assign(...result));
+
+
+/**
  * Fetches a book from the database given its id.
  *
  * @param {number} id
  * @returns {object} Matching movie.
  */
-const fetchMovieById = (id) =>
-{
-    return db.
-        from('resources').
-        innerJoin('movie', 'resources.id', 'movie.resource_id').
-        where('resources.id', id).
-        then(
-            (rows) =>
-            {
-                if (rows.length == 0)
-                {
-                    throw new Error('Invalid credentials.');
-                }
-                else
-                {
-                    return (
-                        {
-                            id: rows[0].id,
-                            name: rows[0].name,
-                            creation_date: rows[0].creation_date,
-                            release_date: rows[0].release_date,
-                            author: rows[0].author_id,
-                            director: rows[0].director,
-                        });
-                }
-            })
-};
+// const fetchMovieById = (id) =>
+// {
+//     return db.
+//         from('resources').
+//         innerJoin('movie', 'resources.id', 'movie.resource_id').
+//         where('resources.id', id).
+//         then(
+//             (rows) =>
+//             {
+//                 if (rows.length == 0)
+//                 {
+//                     throw new Error('Invalid credentials.');
+//                 }
+//                 else
+//                 {
+//                     return (
+//                         {
+//                             id: rows[0].id,
+//                             name: rows[0].name,
+//                             creation_date: rows[0].creation_date,
+//                             release_date: rows[0].release_date,
+//                             author: rows[0].author_id,
+//                             director: rows[0].director,
+//                         });
+//                 }
+//             })
+// };
 
 
 /**

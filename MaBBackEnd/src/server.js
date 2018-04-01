@@ -647,7 +647,7 @@ resourceRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        db.fetchBookById(request.params.id).
+        db.fetchBookById(request.params.id, request.body.user_email).
             then((book) => response.status(200).send({ book })).
             catch((error) => response.status(500).end());
     });
@@ -688,7 +688,7 @@ resourceRoutes.get(
     ensureAuthenticated,
     (request, response) =>
     {
-        db.fetchMovieById(request.params.id).
+        db.fetchMovieById(request.params.id, request.body.user_email).
             then((movie) => response.status(200).send({ movie })).
             catch((error) => response.status(500).end())
     });
