@@ -46,30 +46,44 @@ const db =
 
 
 /**
- * Fetches an user from the database given its id.
+ * Fetches an user from the database given its id and its friendship
+ * status with a user given the its email address.
  *
- * @param {number} id
+ * @param {number} userID
+ * @param {string} userEmail
+ *
  * @returns {object} Matching user.
  */
-const fetchUserById = (id) =>
-{
-    return db.
-        select('id', 'email', 'creation_date').
-        from('user').
-        where({ id }).
+const fetchUserById = (userID, userEmail) =>
+    fetchUser(userEmail).
         then(
-            (rows) =>
-            {
-                if (rows.length == 0)
-                {
-                    return ({});
-                }
-                else
-                {
-                    return rows[0];
-                }
-            });
-};
+            (user) =>
+                db.column(
+                        'id',
+                        'email',
+                        { 'user_creation_date': 'user.creation_date' },
+                        { 'friendrequest_creation_date': 'friendrequest.creation_date' },
+                        { 'friendrequest_review_date': 'friendrequest.review_date' },
+                        { 'friendrequest_accepted': 'friendrequest.accepted' },
+                        { 'friendrequest_orig_author_id': 'friendrequest.orig_author_id' },
+                        { 'friendrequest_dest_author_id': 'friendrequest.dest_author_id' }).
+                    select().
+                    from('user').
+                    leftOuterJoin(
+                        'friendrequest',
+                        function ()
+                        {
+                            this.
+                                on(db.raw('friendrequest.orig_author_id = user.id AND friendrequest.dest_author_id = ?', user.id)).
+                                orOn(db.raw('friendrequest.orig_author_id = ? AND friendrequest.dest_author_id = user.id', user.id));
+                        }).
+                    where('user.id', userID)).
+                    then(
+                        (rows) =>
+                            rows[0] ?
+                                rows[0] :
+                                {});
+
 
 /**
  * Fetches a user from the database given its email address.
@@ -1085,41 +1099,6 @@ const fetchMovieById = (resourceID, userEmail) =>
                         selectWishlist(resourceID, user.id),
                     ])).
         then((result) => Object.assign(...result));
-
-
-/**
- * Fetches a book from the database given its id.
- *
- * @param {number} id
- * @returns {object} Matching movie.
- */
-// const fetchMovieById = (id) =>
-// {
-//     return db.
-//         from('resources').
-//         innerJoin('movie', 'resources.id', 'movie.resource_id').
-//         where('resources.id', id).
-//         then(
-//             (rows) =>
-//             {
-//                 if (rows.length == 0)
-//                 {
-//                     throw new Error('Invalid credentials.');
-//                 }
-//                 else
-//                 {
-//                     return (
-//                         {
-//                             id: rows[0].id,
-//                             name: rows[0].name,
-//                             creation_date: rows[0].creation_date,
-//                             release_date: rows[0].release_date,
-//                             author: rows[0].author_id,
-//                             director: rows[0].director,
-//                         });
-//                 }
-//             })
-// };
 
 
 /**

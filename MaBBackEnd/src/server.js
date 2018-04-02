@@ -584,14 +584,15 @@ userRoutes.get(
 /**
  * GET {userRoutes}/:id
  *
- * Returns the information about an user.
+ * Returns the information about an user including the friendship status
+ * with the user making the request.
  */
 userRoutes.get(
     '/:id',
     ensureAuthenticated,
     (request, response) =>
     {
-        db.fetchUserById(request.params.id).
+        db.fetchUserById(request.params.id, request.body.user_email).
             then((user) => response.status(200).send({ user })).
             catch((error) => response.status(500).end());
     });
