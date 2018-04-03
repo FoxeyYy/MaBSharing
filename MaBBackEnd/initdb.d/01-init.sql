@@ -2,6 +2,15 @@
 -- USERS
 --
 
+ALTER DATABASE mabsharing
+  CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_bin';
+
+
+--
+-- USERS
+--
+
 CREATE TABLE IF NOT EXISTS user (
   id int(5) NOT NULL AUTO_INCREMENT,
   email varchar(64) NOT NULL UNIQUE CHECK (LENGTH(email) > 0),
