@@ -126,7 +126,6 @@ const insertUser = (email, password) =>
             {
                 email,
                 password,
-                creation_date: new Date().toISOString().split('T')[0]
             });
 };
 
@@ -239,7 +238,6 @@ const insertFriendshipRequest = (userEmail, destUserID) =>
                         insert(
                             {
                                 creation_date: new Date().toISOString().split('T')[0],
-                                review_date: null,
                                 accepted: null,
                                 orig_author_id: user.id,
                                 dest_author_id: destUserID,
@@ -257,7 +255,6 @@ const acceptFriendshipRequest = (userEmail, origUserID) =>
                     andWhere('dest_author_id', '=', user.id).
                     update(
                         {
-                            review_date: new Date().toISOString().split('T')[0],
                             accepted: 1,
                         })).
         then(() => origUserID);
@@ -273,7 +270,6 @@ const denyFriendshipRequest = (userEmail, origUserID) =>
                     andWhere('dest_author_id', '=', user.id).
                     update(
                         {
-                            review_date: new Date().toISOString().split('T')[0],
                             accepted: 0,
                         })).
         then(() => origUserID);
@@ -348,7 +344,6 @@ const insertOnWishList = (userEmail, resourceID) =>
                         {
                             author_id: user.id,
                             resource_id: resourceID,
-                            last_modified: new Date().toISOString().split('T')[0],
                         }).
                     then(
                         () =>
@@ -427,7 +422,6 @@ const insertOnMarkedList = (userEmail, resourceID) =>
                         {
                             author_id: user.id,
                             resource_id: resourceID,
-                            last_modified: new Date().toISOString().split('T')[0],
                         }).
                     then(() => resourceID));
 
@@ -571,7 +565,6 @@ const insertOnRatedList = (userEmail, resourceID, liked) =>
                     insert(
                         {
                             like_it: (liked) ? 1 : 0,
-                            last_modified: new Date().toISOString().split('T')[0],
                             author_id: user.id,
                             resource_id: resourceID,
                         }).
@@ -597,7 +590,6 @@ const updateRating = (userEmail, resourceID, liked) =>
                     update(
                         {
                             like_it: (liked) ? 1 : 0,
-                            last_modified: new Date().toISOString().split('T')[0],
                         })).
         then(() => resourceID);
 
@@ -869,22 +861,11 @@ const fetchFriendsEvents = (userEmail) =>
         then(
             (friends) =>
             {
-                // return friends.reduce(
-                //     (acc, friend_id) =>
-                //     {
-                //         return Object.assign(
-                //             acc,
-                //             {
-                //                 friend_id: fetchEventsByUserID(friend_id),
-                //             });
-                //     },
-                //     {});
                 return Promise.all([friends].concat(friends.map(fetchEventsByUserID)));
             }).
             then(
                 (result) =>
                 {
-                    // return result;
                     const ids = result[0];
                     const events = result.slice(1);
                     return result[0].reduce(
@@ -1040,7 +1021,6 @@ const insertBook = ({ name, releaseDate, userEmail, writer, edition }) =>
                             insert(
                                 {
                                     name,
-                                    creation_date: new Date().toISOString().split('T')[0],
                                     release_date: releaseDate,
                                     author_id: user.id,
                                 }).
@@ -1129,7 +1109,6 @@ const insertMovie = ({ name, releaseDate, userEmail, director }) =>
                             insert(
                                 {
                                     name,
-                                    creation_date: new Date().toISOString().split('T')[0],
                                     release_date: releaseDate,
                                     author_id: user.id,
                                 }).
@@ -1189,7 +1168,6 @@ const insertComment = (userEmail, resourceID, comment) =>
                 db('comment').
                     insert(
                         {
-                            creation_date: new Date().toISOString().split('T')[0],
                             author_id: user.id,
                             resource_id: resourceID,
                             comment,

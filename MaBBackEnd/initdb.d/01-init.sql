@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS user (
   id int(5) NOT NULL AUTO_INCREMENT,
   email varchar(64) NOT NULL UNIQUE CHECK (LENGTH(email) > 0),
   password char(64) NOT NULL,
-  creation_date DATE NOT NULL,
+  creation_date TIMESTAMP,
   PRIMARY KEY(id),
   FULLTEXT(email)
 ) ENGINE=INNODB;
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS friendrequest (
   creation_date DATE NOT NULL,
-  review_date DATE,
+  review_date TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   accepted BOOLEAN,
   orig_author_id int(5) NOT NULL,
   dest_author_id int(5) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS friendrequest (
 CREATE TABLE IF NOT EXISTS resources (
   id int(5) NOT NULL AUTO_INCREMENT,
   name varchar(30) NOT NULL,
-  creation_date DATE NOT NULL,
+  creation_date TIMESTAMP,
   release_date DATE NOT NULL,
   author_id int(5) NOT NULL,
   PRIMARY KEY(id),
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS book (
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS comment (
-  creation_date DATE NOT NULL,
+  creation_date TIMESTAMP,
   author_id int(5) NOT NULL,
   resource_id int(5) NOT NULL,
   comment varchar(1024) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS comment (
 CREATE TABLE IF NOT EXISTS wishlist (
   author_id int(5) NOT NULL,
   resource_id int(5) NOT NULL,
-  last_modified DATE NOT NULL,
+  last_modified TIMESTAMP,
   PRIMARY KEY(author_id, resource_id),
   INDEX author_ind (author_id),
   INDEX resource_ind (resource_id),
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS wishlist (
 CREATE TABLE IF NOT EXISTS marked (
   author_id int(5) NOT NULL,
   resource_id int(5) NOT NULL,
-  last_modified DATE NOT NULL,
+  last_modified TIMESTAMP,
   PRIMARY KEY(author_id, resource_id),
   INDEX author_ind (author_id),
   INDEX resource_ind (resource_id),
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS marked (
 
 CREATE TABLE IF NOT EXISTS rating (
   like_it boolean NOT NULL,
-  last_modified DATE NOT NULL,
+  last_modified TIMESTAMP,
   author_id int(5) NOT NULL,
   resource_id int(5) NOT NULL,
   PRIMARY KEY(author_id, resource_id),
