@@ -13,7 +13,8 @@ export class UserComponent implements OnInit {
   private user: User
   private errMsg: string = '';
   private added: boolean = false;
-  private currentUser: boolean = false;
+  private pendingRequest = false;
+  private isCurrentUser: boolean = false;
 
   constructor(
     private userService: UsersService,
@@ -24,7 +25,9 @@ export class UserComponent implements OnInit {
     this.route.data.subscribe(
       (data: { results: User }) => {
         this.user = data.results;
-        this.currentUser = this.userService.getCurrentUserEmail() === this.user.email;
+        this.isCurrentUser = this.userService.getCurrentUserEmail() === this.user.email;
+        this.pendingRequest = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted === null;
+        this.added = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted;
       }
     );
   }
@@ -40,7 +43,7 @@ export class UserComponent implements OnInit {
         return;
       }
 
-      this.added = true;
+      this.pendingRequest = true;
     });
   }
 

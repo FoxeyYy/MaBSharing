@@ -56,7 +56,13 @@ export class UsersService {
    */
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.usersUrl}/${id}`).pipe(
-      map(user => user["user"]),
+      map(user => {
+        var result: User = user["user"];
+        if (user["user"]["friendrequest_accepted"]) {
+          result.friendrequest_accepted = user["user"]["friendrequest_accepted"] === "0" ? false : true;
+        }
+        return result;
+      }),
       catchError(error => of({} as User))
     )
   }
@@ -78,7 +84,7 @@ export class UsersService {
     return this.http.get<FriendshipRequest[]>(`${this.usersUrl}/friendship_requests`).pipe(
       map(response => {
         let requests: FriendshipRequest[] = [];
-      
+
         for (let request of response["friendship_requests"]) {
           requests.push({
             authorId: +request["orig_author_id"],
@@ -89,7 +95,7 @@ export class UsersService {
 
         return requests;
       }),
-      catchError(error => of([{authorId: -1} as FriendshipRequest]))
+      catchError(error => of([{ authorId: -1 } as FriendshipRequest]))
     );
   }
 
@@ -98,7 +104,7 @@ export class UsersService {
    * @param userId of the target user.
    */
   createFriendshipRequest(userId: number): Observable<number> {
-    return this.http.post<number>(`${this.usersUrl}/friendship_requests/`, {dest_user_id: userId}).pipe(
+    return this.http.post<number>(`${this.usersUrl}/friendship_requests/`, { dest_user_id: userId }).pipe(
       map(response => response["id"]),
       catchError(error => of(-1))
     );
@@ -110,7 +116,7 @@ export class UsersService {
    * @param accept true to accept, false to refuse.
    */
   dispatchFriendshipRequest(authorId: number, accept: boolean): Observable<number> {
-    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, {accepted: accept}).pipe(
+    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, { accepted: accept }).pipe(
       map(response => response["id"]),
       catchError(error => of(-1))
     );
@@ -121,25 +127,25 @@ export class UsersService {
    */
   getWishlist(): Observable<any[]> {
     return this.http.get<any[]>(`${this.usersUrl}/wishlist`).pipe(
-        map(json => {
+      map(json => {
 
-          var movies =new Array<Movie>();
-          json['wishlist']['movies'].forEach(element => {
-            movies.push(Object.assign(new Movie, element));
-          }); 
+        var movies = new Array<Movie>();
+        json['wishlist']['movies'].forEach(element => {
+          movies.push(Object.assign(new Movie, element));
+        });
 
-          var books =new Array<Book>();
-          json['wishlist']['books'].forEach(element => {
-            books.push(Object.assign(new Book, element));
-          });
+        var books = new Array<Book>();
+        json['wishlist']['books'].forEach(element => {
+          books.push(Object.assign(new Book, element));
+        });
 
-          var result = new Array<Resource>();
-          result = result.concat(books);
-          result = result.concat(movies);  
-          
-          return result;
-        })
-      );
+        var result = new Array<Resource>();
+        result = result.concat(books);
+        result = result.concat(movies);
+
+        return result;
+      })
+    );
   }
 
 }

@@ -5,13 +5,14 @@
   <div class="row px-3 pb-3">
 
     <div class="col-md">
-      User since {{user.creationDate}}
+      User since {{user.user_creation_date | date}}
     </div>
 
-    <div *ngIf="!currentUser" class="col-md mt-2 mt-md-0">
+    <div *ngIf="!isCurrentUser" class="col-md mt-2 mt-md-0">
       <span class="alert alert-danger mr-4" role="alert" *ngIf="errMsg"> {{errMsg}} </span>
-      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" *ngIf="!added" (click)="sendFriendRequest()"> Send friend request</button>
-      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" *ngIf="added" disabled> Pending request</button>
+      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" *ngIf="!pendingRequest && !added" (click)="sendFriendRequest()"> Send friend request</button>
+      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" *ngIf="added" disabled> Already friends</button>
+      <button class="btn btn-outline-primary oi oi-person float-md-right" title="Add friend" aria-hidden="true" *ngIf="pendingRequest" disabled> Pending request</button>
     </div>
 
   </div>
