@@ -58,6 +58,7 @@ export class UsersService {
     return this.http.get<User>(`${this.usersUrl}/${id}`).pipe(
       map(user => {
         var result: User = user["user"];
+        result.creation_date = user["user"]["user_creation_date"];
         if (user["user"]["friendrequest_accepted"]) {
           result.friendrequest_accepted = user["user"]["friendrequest_accepted"] === "0" ? false : true;
         }

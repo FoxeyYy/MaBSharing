@@ -1,7 +1,7 @@
 export class Resource {
     id: number;
     name: string;
-    creationDate: Date;
-    releaseDate: Date;
+    creation_date: Date;
+    release_date: Date;
     author: number;
 }

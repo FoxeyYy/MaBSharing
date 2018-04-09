@@ -5,7 +5,7 @@
       <h5 class="list-group-item list-group-item-primary">{{users.length}} users</h5>
       <a *ngFor="let user of users" class="list-group-item list-group-item-action" routerLink="/user/{{user.id}}">
         <h6>{{user.email}}</h6>
-        <small> Member since {{user.creationDate | date}}</small>
+        <small> Member since {{user.creation_date | date}}</small>
       </a>
     </div>
 
@@ -14,7 +14,7 @@
       <a *ngFor="let book of books" class="list-group-item list-group-item-action" routerLink="/book/{{book.id}}">
         <h6>{{book.name}}</h6>
         <small> Written by {{book.writer}}
-          <br> Edition #{{book.edition}} released on {{book.releaseDate | date}}</small>
+          <br> Edition #{{book.edition}} released on {{book.release_date | date}}</small>
       </a>
     </div>
 
@@ -23,7 +23,7 @@
       <a *ngFor="let movie of movies" class="list-group-item list-group-item-action" routerLink="/movie/{{movie.id}}">
         <h6>{{movie.name}}</h6>
         <small> Directed by {{movie.director}}
-          <br> Released on {{movie.releaseDate | date}}</small>
+          <br> Released on {{movie.release_date | date}}</small>
       </a>
     </div>
 

@@ -1,5 +1,5 @@
 export class Comment {
-    creationDate: Date;
+    creation_date: Date;
     comment: string;
     author_id: number;
     resource_id: number;
