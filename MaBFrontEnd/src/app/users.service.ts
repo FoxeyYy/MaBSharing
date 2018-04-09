@@ -123,6 +123,10 @@ export class UsersService {
     );
   }
 
+  getRecordslist(): Observable<Resource[]> {
+    return of ();
+  }
+
   /**
    * Retrieves current logged user's wishlist from server.
    */
@@ -182,6 +186,13 @@ export class UsersService {
     return this.http.post<number>(`${this.usersUrl}/ratings`, { id: resource.id , liked: like}).pipe(
       map(result => result),
       catchError(error => of(-1))
+    );
+  }
+
+  getUserEvents(id: number): Observable<any[]> {
+    return this.http.get(`${this.usersUrl}/events/${id}`).pipe(
+      map(result => result["events"]),
+      catchError(error => of([-1] as any))
     );
   }
 

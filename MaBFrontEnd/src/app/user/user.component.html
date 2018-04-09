@@ -18,3 +18,30 @@
   </div>
 
 </div>
+
+<div class="content mx-auto rounded my-4 list-group">
+  <h5 *ngIf="!events.length" class="list-group-item list-group-item-success">This user has no recent activity.</h5>
+  <h5 *ngIf="events.length" class="list-group-item list-group-item-success">{{events.length}} events</h5>
+  <div *ngFor="let event of events | reverse" class="list-group-item">
+    <span *ngIf="event.event === 'wishlist'">
+      Added <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> to wishlist
+    </span>
+
+    <span *ngIf="event.event === 'marked'">
+      Marked <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> as already seen
+    </span>
+
+    <span *ngIf="event.event === 'rating'">
+      {{event.like_it === '1' ? "Liked" : "Disliked"}} <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+    </span>
+
+    <span *ngIf="event.event === 'comment'">
+      Commented <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+    </span>
+
+    <span>on {{event.timestamp | date:'MMM d, y - H:mm:ss'}}</span>
+
+    <div *ngIf="event.event === 'comment'" class="comment pl-1 mt-1">{{event.comment}}</div>
+
+  </div>
+</div>

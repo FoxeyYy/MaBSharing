@@ -8,3 +8,8 @@
         max-width: 100%;
     }
 }
+
+.comment {
+    border-left: solid gainsboro;
+    white-space: pre-line;
+}
