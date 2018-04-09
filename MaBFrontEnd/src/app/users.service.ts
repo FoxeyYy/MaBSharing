@@ -149,4 +149,40 @@ export class UsersService {
     );
   }
 
+  /**
+   * Adds / Removes a resource from user's whislist.
+   * @param resource to add/remove.
+   * @param state true if to add, false otherwise.
+   */
+  wishlistResource(resource: Resource, state: boolean): Observable<number> {
+    return this.http.post<number>(`${this.usersUrl}/wishlist`, { id: resource.id }).pipe(
+      map(result => result),
+      catchError(error => of(-1))
+    );
+  }
+
+  /**
+   * Adds / Removes a resource from user's marked list.
+   * @param resource to add/remove.
+   * @param state true if to add, false otherwise.
+   */
+  markResource(resource: Resource, state: boolean): Observable<number> {
+    return this.http.post<number>(`${this.usersUrl}/marked`, { id: resource.id }).pipe(
+      map(result => result),
+      catchError(error => of(-1))
+    );
+  }
+
+  /**
+   * Likes / Dislikes a resource.
+   * @param resource to like/dislike.
+   * @param like true if liked, false otherwise.
+   */
+  likeResource(resource: Resource, like: boolean): Observable<number> {
+    return this.http.post<number>(`${this.usersUrl}/ratings`, { id: resource.id , liked: like}).pipe(
+      map(result => result),
+      catchError(error => of(-1))
+    );
+  }
+
 }

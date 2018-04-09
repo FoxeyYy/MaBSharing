@@ -58,7 +58,13 @@ export class ResourcesService {
    */
   getBook(id: number): Observable<Book> {
     return this.http.get<Book>(`${this.resourcesUrl}/book/${id}`).pipe(
-      map(book => book["book"]),
+      map(result => {
+        var book: Book = result["book"];
+        if (result["book"]["like_it"]){
+          book.like_it = result["book"]["like_it"] === "0" ? false : true;
+        }
+        return book;
+      }),
       catchError(error => of({} as Book))
     )
   }
@@ -70,7 +76,7 @@ export class ResourcesService {
   createBook(book: Book): Observable<number> {
     return this.http.post<number>(`${this.resourcesUrl}/book`, {
       name: book.name,
-      release_date: book.releaseDate,
+      release_date: book.release_date,
       writer: book.writer,
       edition: book.edition,
     }).pipe(
@@ -84,8 +90,14 @@ export class ResourcesService {
    * @param id of the movie.
    */
   getMovie(id: number): Observable<Movie> {
-    return this.http.get<Book>(`${this.resourcesUrl}/movie/${id}`).pipe(
-      map(movie => movie["movie"]),
+    return this.http.get<Movie>(`${this.resourcesUrl}/movie/${id}`).pipe(
+      map(result => {
+        var movie: Movie = result["movie"];
+        if (result["movie"]["like_it"]){
+          movie.like_it = result["movie"]["like_it"] === "0" ? false : true;
+        }
+        return result["movie"];
+      }),
       catchError(error => of({} as Movie))
     )
   }
@@ -97,7 +109,7 @@ export class ResourcesService {
   createMovie(movie: Movie): Observable<number> {
     return this.http.post<number>(`${this.resourcesUrl}/movie`, {
       name: movie.name,
-      release_date: movie.releaseDate,
+      release_date: movie.release_date,
       director: movie.director,
     }).pipe(
       map(id => id["resource_id"]),

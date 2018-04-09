@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Resource } from '../Resource';
 import { Comment } from '../Comment';
 import { ResourcesService } from '../resources.service';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-resource',
@@ -13,12 +14,14 @@ export class ResourceComponent implements OnInit {
 
   private resource: Resource
   private errorSubmitting: boolean = false
+  private errorMarking: boolean = false
   private comment: string = ""
   private comments: Comment[] = []
 
   constructor(
     private route: ActivatedRoute,
-    private resourceService: ResourcesService
+    private resourceService: ResourcesService,
+    private userService: UsersService
   ) { }
 
   ngOnInit() {
@@ -53,6 +56,67 @@ export class ResourceComponent implements OnInit {
   }
 
   /**
+   * Submit wishlist status to server.
+   * @param active if to add, false otherwise.
+   */
+  wishlistResource(active: boolean) {
+    this.errorMarking = false;
+
+    this.userService.wishlistResource(this.resource, active).subscribe(
+      result => {
+        if (result < 0) {
+          this.errorMarking = true;
+          return;
+        }
+
+        this.resource.on_wishlist = active;
+      }
+    )
+  }
+
+  /**
+   * Submit mark status to server.
+   * @param active if to add, false otherwise.
+   */
+  markResource(active: boolean) {
+    this.errorMarking = false;
+
+    this.userService.markResource(this.resource, active).subscribe(
+      result => {
+        if (result < 0) {
+          this.errorMarking = true;
+          return;
+        }
+
+        this.resource.marked = active;
+      }
+    )
+  }
+
+  /**
+   * Likes / Dislikes a resource.
+   * @param liked true if liked, false otherwise.
+   */
+  likeResource(like: boolean) {
+    this.errorMarking = false;
+
+    if (like === this.resource.like_it) {
+      return;
+    }
+
+    this.userService.likeResource(this.resource, like).subscribe(
+      result => {
+        if (result < 0) {
+          this.errorMarking = true;
+          return;
+        }
+
+        this.resource.like_it = like;
+      }
+    )
+  }
+
+  /**
    * Submits a comment to the server.
    * @param comment to submit.
    */
@@ -72,7 +136,7 @@ export class ResourceComponent implements OnInit {
 
         this.comments.push({
           comment: comment,
-          creationDate: new Date(),
+          creation_date: new Date(),
           author_id: 1
         } as Comment);
 

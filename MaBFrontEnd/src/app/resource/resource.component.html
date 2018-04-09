@@ -20,20 +20,24 @@
     <div class="row mt-3">
 
       <div class="col-md">
-        <button class="btn btn-outline-primary oi oi-star" title="Add to wishlist" aria-hidden="true"> Add to wishlist</button>
+        <button class="btn oi oi-star" [ngClass]="resource.on_wishlist ? 'btn-primary' : 'btn-outline-primary'" title="Wishlist" aria-hidden="true" (click)="wishlistResource(!resource.on_wishlist)"> Wishlist</button>
 
       </div>
 
       <div class="col-md my-3 my-md-0">
         <div class="d-flex justify-content-md-center">
-          <button class="btn btn-outline-success oi oi-thumb-up mr-1" title="Like" aria-hidden="true">Like</button>
-          <button class="btn btn-outline-danger oi oi-thumb-down" title="Dislike" aria-hidden="true">Dislike</button>
+          <button class="btn oi oi-thumb-up mr-1" [ngClass]="resource.like_it ? 'btn-success' : 'btn-outline-success'" title="Like" aria-hidden="true" (click)="likeResource(true)">Like</button>
+          <button class="btn oi oi-thumb-down" [ngClass]="(resource.like_it !== null && !resource.like_it)  ? 'btn-danger' : 'btn-outline-danger'" title="Dislike" aria-hidden="true" (click)="likeResource(false)">Dislike</button>
         </div>
       </div>
 
       <div class="col-md">
-        <button class="btn btn-outline-primary oi oi-eye float-md-right" title="Add to records" aria-hidden="true"> I've seen it</button>
+        <button class="btn oi oi-eye float-md-right" [ngClass]="resource.marked ? 'btn-primary' : 'btn-outline-primary'" title="Add to records" aria-hidden="true" (click)="markResource(!resource.marked)"> I've seen it</button>
       </div>
+    </div>
+
+    <div *ngIf="errorMarking" class="alert alert-danger my-2" role="alert">
+      Couldn't submit new status :(
     </div>
 
     <form class="mt-3">
