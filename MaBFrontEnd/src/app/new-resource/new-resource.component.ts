@@ -57,7 +57,7 @@ export class NewResourceComponent implements OnInit {
       case this.types[0]: {
         resource = {
           name: this.title,
-          releaseDate: this.releaseDate,
+          release_date: this.releaseDate,
           edition: this.edition,
           writer: this.author
         };
@@ -74,7 +74,7 @@ export class NewResourceComponent implements OnInit {
       } default: {
         resource = {
           name: this.title,
-          releaseDate: this.releaseDate,
+          release_date: this.releaseDate,
           director: this.author
         };
 
