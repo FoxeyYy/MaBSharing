@@ -28,13 +28,13 @@ export class ResourceComponent implements OnInit {
     this.route.data.subscribe(
       (data: { results: Resource }) => {
         this.resource = data.results;
-      }
-    );
 
-    this.resourceService.getComments(this.resource.id).subscribe(
-      comments => {
-        this.comments = comments;
+        this.resourceService.getComments(this.resource.id).subscribe(
+          comments => {
+            this.comments = comments;
+          });
       });
+
   }
 
   /**

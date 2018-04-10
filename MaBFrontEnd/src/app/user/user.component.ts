@@ -30,18 +30,17 @@ export class UserComponent implements OnInit {
         this.isCurrentUser = this.userService.getCurrentUserEmail() === this.user.email;
         this.pendingRequest = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted === null;
         this.added = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted;
+
+        this.userService.getUserEvents(this.user.id).subscribe( result => {
+          if (result.length && result[0] === -1) {
+            this.eventsError = "Couldn't retrieve events :(";
+            return;
+          }
+          
+          this.events = result;
+        });
       }
     );
-
-    this.userService.getUserEvents(this.user.id).subscribe( result => {
-      console.log(result);
-      if (result.length && result[0] === -1) {
-        this.eventsError = "Couldn't retrieve events :(";
-        return;
-      }
-      
-      this.events = result;
-    });
   }
 
   /**
