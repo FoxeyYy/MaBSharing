@@ -1,4 +1,4 @@
-import { NgModule }             from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
@@ -19,69 +19,80 @@ import { RequestsComponent } from './requests/requests.component';
 import { RequestsResolver } from './requests/requests-resolver.service';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { WishListResolver } from './wish-list/wish-list-resolver.service';
+import { ResourcesService } from './resources.service';
+import { RecordsResolver } from './records/records-resolver.service';
 
 const routes: Routes = [
-  { path: '',
-   component: HomeComponent,
+  {
+    path: '',
+    component: HomeComponent,
     canActivate: [AuthGuard],
     resolve: {
       results: CurrentUserResolver
     },
     children: [
       { path: '', component: WallComponent },
-      { path: 'error', component: ErrorComponent},
-      { path: 'resource/new', component: NewResourceComponent},
-      { 
+      { path: 'error', component: ErrorComponent },
+      { path: 'resource/new', component: NewResourceComponent },
+      {
         path: 'wishlist',
         component: WishListComponent,
         resolve: {
           results: WishListResolver
         }
       },
-      { 
+      {
+        path: 'records',
+        component: WishListComponent,
+        resolve: {
+          results: RecordsResolver
+        }
+      },
+      {
         path: 'search',
         component: SearchComponent,
         resolve: {
           results: SearchResolver
         }
       },
-      { 
+      {
         path: 'requests',
         component: RequestsComponent,
         resolve: {
           results: RequestsResolver
         }
       },
-      { 
+      {
         path: 'user/:id',
         component: UserComponent,
         resolve: {
           results: UserResolver
         }
       },
-      { 
+      {
         path: 'book/:id',
         component: ResourceComponent,
         resolve: {
           results: BookResolver
         }
       },
-      { 
+      {
         path: 'movie/:id',
         component: ResourceComponent,
         resolve: {
           results: MovieResolver
         }
       }
-    ] },
+    ]
+  },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ],
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
   providers: [
     SearchResolver,
     BookResolver,
@@ -89,7 +100,8 @@ const routes: Routes = [
     UserResolver,
     CurrentUserResolver,
     RequestsResolver,
-    WishListResolver
+    WishListResolver,
+    RecordsResolver
   ]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
