@@ -123,8 +123,30 @@ export class UsersService {
     );
   }
 
+  /**
+   * Retrieves current logged user's records list from server.
+   */
   getRecordslist(): Observable<Resource[]> {
-    return of ();
+    return this.http.get<any[]>(`${this.usersUrl}/marked`).pipe(
+      map(json => {
+
+        var movies = new Array<Movie>();
+        json['marked']['movies'].forEach(element => {
+          movies.push(Object.assign(new Movie, element));
+        });
+
+        var books = new Array<Book>();
+        json['marked']['books'].forEach(element => {
+          books.push(Object.assign(new Book, element));
+        });
+
+        var result = new Array<Resource>();
+        result = result.concat(books);
+        result = result.concat(movies);
+
+        return result;
+      })
+    );
   }
 
   /**
