@@ -20,7 +20,7 @@ import { RequestsResolver } from './requests/requests-resolver.service';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { WishListResolver } from './wish-list/wish-list-resolver.service';
 import { ResourcesService } from './resources.service';
-import { RecordsResolver } from './records/records-resolver.service';
+import { RecordsResolver } from './wish-list/records-resolver.service';
 
 const routes: Routes = [
   {
