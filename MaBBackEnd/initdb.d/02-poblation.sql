@@ -64,11 +64,11 @@ VALUES
 INSERT INTO
     comment (creation_date, author_id, resource_id, comment)
 VALUES
-    ('2018-03-11', 1, 1, '🚀'),
-    ('2018-03-11', 2, 1, '👏'),
-    ('2018-03-13', 3, 1, '👎'),
-    ('2018-03-15', 2, 1, '🔥'),
-    ('2018-03-11', 1, 4, '🤔');
+    ('2018-03-11', 1, 1, 'Let me take a nap... great atmosphere, anyway.'),
+    ('2018-03-11', 2, 1, 'Immensely sleek shot.'),
+    ('2018-03-13', 3, 1, 'It\'s splendid not just classic!'),
+    ('2018-03-15', 2, 1, 'I think I\'m crying. It\'s that fresh.'),
+    ('2018-03-11', 1, 4, 'Gorgeous. So cool.');
 
 
 --

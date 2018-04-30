@@ -3,8 +3,8 @@
 --
 
 ALTER DATABASE mabsharing
-  CHARACTER SET = 'utf8'
-  COLLATE = 'utf8_bin';
+  CHARACTER SET = 'utf8mb4'
+  COLLATE = 'utf8mb4_bin';
 
 
 --
