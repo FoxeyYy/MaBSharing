@@ -351,6 +351,30 @@ const insertOnWishList = (userEmail, resourceID) =>
                             return resourceID
                         }));
 
+
+/**
+ * Deletes a resource from a user wishlist.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ *
+ * @returns {Promise<number>} Item id of deleted resource.
+ */
+const deleteFromWishList = (userEmail, resourceID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('wishlist').
+                    where('author_id', user.id).
+                    andWhere('resource_id', resourceID).
+                    del().
+                    then(
+                        () =>
+                        {
+                            return resourceID
+                        }));
+
+
 /**
  * Returns the resources ids marked as read/seen by a user.
  *
@@ -424,6 +448,25 @@ const insertOnMarkedList = (userEmail, resourceID) =>
                             resource_id: resourceID,
                         }).
                     then(() => resourceID));
+
+
+/**
+ * Deletes a resource from a user marked list.
+ *
+ * @param {string} userEmail
+ * @param {number} resourceID
+ *
+ * @returns {Promise<number>} Item id of deleted resource.
+ */
+const deleteFromMarkedList = (userEmail, resourceID) =>
+    fetchUser(userEmail).
+        then(
+            (user) =>
+                db('marked').
+                    where('author_id', user.id).
+                    andWhere('resource_id', resourceID).
+                    del().
+                    then(() => resourceID ));
 
 
 /**
@@ -1268,9 +1311,11 @@ module.exports = {
 
     insertOnWishList,
     fetchWishList,
+    deleteFromWishList,
 
     insertOnMarkedList,
     fetchMarkedList,
+    deleteFromMarkedList,
 
     fetchRatedList,
     insertOnRatedList,
