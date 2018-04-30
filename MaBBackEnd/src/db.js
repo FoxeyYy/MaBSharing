@@ -911,16 +911,32 @@ const fetchFriendsEvents = (userEmail) =>
                 {
                     const ids = result[0];
                     const events = result.slice(1);
+                    // return result[0].reduce(
+                    //     (acc, friend_id, idx) =>
+                    //     {
+                    //         return Object.assign(
+                    //             acc,
+                    //             {
+                    //                 [friend_id]: events[idx],
+                    //             });
+                    //     },
+                    //     {});
                     return result[0].reduce(
                         (acc, friend_id, idx) =>
                         {
-                            return Object.assign(
-                                acc,
+                            const updated = events[idx].reduce(
+                                (acc, event) =>
                                 {
-                                    [friend_id]: events[idx],
-                                });
+                                    acc.push(
+                                        Object.assign(
+                                            { friend_id },
+                                            event));
+                                    return acc;
+                                },
+                                []);
+                            return acc.concat(updated);
                         },
-                        {});
+                        []);
                 });
 
 
