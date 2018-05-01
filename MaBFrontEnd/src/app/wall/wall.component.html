@@ -22,8 +22,16 @@
       <a routerLink="/user/{{event.orig_author_id}}">User {{event.orig_author_id}}</a> wants to be <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friend
     </span>
 
-    <span *ngIf="event.event === 'accepted_friendship_received'">
-      <a routerLink="/user/{{event.orig_author_id}}">User {{event.orig_author_id}}</a> accepted <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friends request
+    <span *ngIf="event.event === 'friendship_request_received'">
+      <a routerLink="/user/{{event.dest_author_id}}">User {{event.dest_author_id}}</a> has a new friend request from <a routerLink="/user/{{event.orig_author_id}}">user {{event.orig_author_id}}</a>
+    </span>
+
+    <span *ngIf="event.event === 'accepted_friendship_received' || event.event === 'accepted_friendship_sent'">
+      <a routerLink="/user/{{event.orig_author_id}}">User {{event.orig_author_id}}</a> and <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> are now friends
+    </span>
+
+    <span *ngIf="event.event === 'rejected_friendship_received' || event.event === 'rejected_friendship_sent'">
+      <a routerLink="/user/{{event.dest_author_id}}">User {{event.dest_author_id}}</a> refused <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friends request
     </span>
 
     <span>on {{event.timestamp | date:'MMM d, y - H:mm:ss'}}</span>

@@ -39,6 +39,22 @@
       Commented <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
     </span>
 
+    <span *ngIf="event.event === 'friendship_request_sent'">
+      Wants to be <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friend
+    </span>
+
+    <span *ngIf="event.event === 'accepted_friendship_received' || event.event === 'accepted_friendship_sent'">
+      Is now <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friend
+    </span>
+
+    <span *ngIf="event.event === 'rejected_friendship_received' || event.event === 'rejected_friendship_sent'">
+      Refused <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friends request
+    </span>
+
+    <span *ngIf="event.event === 'friendship_request_received'">
+      Has a new friend request from <a routerLink="/user/{{event.orig_author_id}}">user {{event.orig_author_id}}</a>
+    </span>
+
     <span>on {{event.timestamp | date:'MMM d, y - H:mm:ss'}}</span>
 
     <div *ngIf="event.event === 'comment'" class="comment pl-1 mt-1">{{event.comment}}</div>
