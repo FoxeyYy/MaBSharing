@@ -211,6 +211,10 @@ export class UsersService {
     );
   }
 
+  /**
+   * Retrieves an user's events.
+   * @param id of the user.
+   */
   getUserEvents(id: number): Observable<any[]> {
     return this.http.get(`${this.usersUrl}/events/${id}`).pipe(
       map(result => result["events"]),
@@ -218,4 +222,14 @@ export class UsersService {
     );
   }
 
+  /**
+   * Retrieves all friends events.
+   * @param id of the user.
+   */
+  getFriendsEvents(): Observable<any[]> {
+    return this.http.get(`${this.usersUrl}/events`).pipe(
+      map(result => result["events"]),
+      catchError(error => of([-1] as any))
+    );
+  }
 }

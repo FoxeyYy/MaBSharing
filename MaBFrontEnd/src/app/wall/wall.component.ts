@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-wall',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WallComponent implements OnInit {
 
-  constructor() { }
+  private events: any[] = [];
+  private eventsError = '';
+
+  constructor(
+    private userService: UsersService,
+  ) { }
 
   ngOnInit() {
+    this.userService.getFriendsEvents().subscribe( result => {
+      if (result.length && result[0] === -1) {
+        this.eventsError = "Couldn't retrieve events :(";
+        return;
+      }
+      
+      this.events = result;
+    });
   }
 
 }
