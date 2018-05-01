@@ -481,16 +481,16 @@ userRoutes.post(
 
 
 /**
- * DELETE {userRoutes}/wishlist/:resource
+ * DELETE {userRoutes}/wishlist/:resource_id
  *
  * Deletes a resource from the wish list of the user identified by the
  * JWT sent in the request.
  */
 userRoutes.delete(
-    '/wishlist',
+    '/wishlist/:resource_id',
     ensureAuthenticated,
     (request, response) =>
-        db.deleteFromWishList(request.body.user_email, request.body.id).
+        db.deleteFromWishList(request.body.user_email, request.params.resource_id).
             then((resource_id) => response.status(200).send({ resource_id })).
             catch((error) => response.status(500).send({ error })));
 
@@ -530,16 +530,16 @@ userRoutes.post(
 
 
 /**
- * DELETE {userRoutes}/marked
+ * DELETE {userRoutes}/marked/:resource_id
  *
  * Deletes a resource from the list of books read or movies watched by
  * the user identified by the JWT sent in the request.
  */
 userRoutes.delete(
-    '/marked',
+    '/marked/:resource_id',
     ensureAuthenticated,
     (request, response) =>
-        db.deleteFromMarkedList(request.body.user_email, request.body.id).
+        db.deleteFromMarkedList(request.body.user_email, request.params.resource_id).
             then((resource_id) => response.status(200).send({ resource_id })).
             catch((error) => response.status(500).send({ error })));
 

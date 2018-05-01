@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from './User';
 import { tap, catchError, map } from 'rxjs/operators';
 import { FriendshipRequest } from './FriendshipRequest';
 import { Movie } from './Movie';
 import { Book } from './Book';
 import { Resource } from './Resource';
+import { RequestOptions } from '@angular/http';
 
 @Injectable()
 export class UsersService {
@@ -181,10 +182,17 @@ export class UsersService {
    * @param state true if to add, false otherwise.
    */
   wishlistResource(resource: Resource, state: boolean): Observable<number> {
-    return this.http.post<number>(`${this.usersUrl}/wishlist`, { id: resource.id }).pipe(
-      map(result => result),
-      catchError(error => of(-1))
-    );
+    if (state) {
+      return this.http.post<number>(`${this.usersUrl}/wishlist`, { id: resource.id }).pipe(
+        map(result => result),
+        catchError(error => of(-1))
+      );
+    } else {
+      return this.http.delete<number>(`${this.usersUrl}/wishlist/${resource.id}`).pipe(
+        map(result => result),
+        catchError(error => of(-1))
+      );
+    }
   }
 
   /**
@@ -193,10 +201,17 @@ export class UsersService {
    * @param state true if to add, false otherwise.
    */
   markResource(resource: Resource, state: boolean): Observable<number> {
-    return this.http.post<number>(`${this.usersUrl}/marked`, { id: resource.id }).pipe(
-      map(result => result),
-      catchError(error => of(-1))
-    );
+    if (state) {
+      return this.http.post<number>(`${this.usersUrl}/marked`, { id: resource.id }).pipe(
+        map(result => result),
+        catchError(error => of(-1))
+      );
+    } else {
+      return this.http.delete<number>(`${this.usersUrl}/marked/${resource.id}`).pipe(
+        map(result => result),
+        catchError(error => of(-1))
+      );
+    }
   }
 
   /**
@@ -205,7 +220,7 @@ export class UsersService {
    * @param like true if liked, false otherwise.
    */
   likeResource(resource: Resource, like: boolean): Observable<number> {
-    return this.http.post<number>(`${this.usersUrl}/ratings`, { id: resource.id , liked: like}).pipe(
+    return this.http.post<number>(`${this.usersUrl}/ratings`, { id: resource.id, liked: like }).pipe(
       map(result => result),
       catchError(error => of(-1))
     );
