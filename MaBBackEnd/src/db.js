@@ -638,6 +638,28 @@ const updateRating = (userEmail, resourceID, liked) =>
 
 
 /**
+ * Fetch a resouce by its id.
+ *
+ * @param {number} resourceId
+ * @returns {object} Matching resource info.
+ */
+const fetchResourceById = (resourceId) =>
+    Promise.
+        all(
+            [
+                selectBookById(resourceId),
+                selectMovieById(resourceId),
+            ]).
+        then(
+            ([book, movie]) =>
+                book.id ?
+                    Object.assign({ resource_type: "book" }, book) :
+                    movie.id ?
+                        Object.assign({ resource_type: "movie" }, movie) :
+                        {});
+
+
+/**
  * Size in days of the time window used to consider an event as recent.
  *
  * @constant
@@ -658,7 +680,38 @@ const fetchUserRecentComments = (userID, timeWindow=TIME_WINDOW) =>
     db.from('comment').
         where('author_id', '=', userID).
         andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
-        orderBy('creation_date');
+        orderBy('creation_date').
+        then(
+            (comments) =>
+            {
+                const selections =
+                    comments.
+                        map(comment => comment.resource_id).
+                        reduce(
+                            (acc, id) =>
+                            {
+                                acc.push(fetchResourceById(id));
+                                return acc;
+                            },
+                            []);
+                return Promise.all([comments, ...selections]);
+            }).
+        then(
+            ([comments, ...selections]) =>
+            {
+                selections.forEach(resource => delete resource.id);
+                const joined =
+                    comments.reduce(
+                        (acc, item) =>
+                        {
+                            const match = selections.filter(resource => resource.resource_id === item.resource_id)[0];
+                            match["resource_creation_date"] = match.creation_date;
+                            acc.push(Object.assign(match, item));
+                            return acc;
+                        },
+                        []);
+                return joined;
+            });
 
 
 /**
@@ -673,7 +726,39 @@ const fetchUserRecentRatings = (userID, timeWindow=TIME_WINDOW) =>
     db.from('rating').
         where('author_id', '=', userID).
         andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
-        orderBy('last_modified');
+        orderBy('last_modified').
+        then(
+            (ratings) =>
+            {
+                const selections =
+                    ratings.
+                        map(comment => comment.resource_id).
+                        reduce(
+                            (acc, id) =>
+                            {
+                                acc.push(fetchResourceById(id));
+                                return acc;
+                            },
+                            []);
+                return Promise.all([ratings, ...selections]);
+            }).
+        then(
+            ([ratings, ...selections]) =>
+            {
+                selections.forEach(resource => delete resource.id);
+                const joined =
+                    ratings.reduce(
+                        (acc, item) =>
+                        {
+                            const match = selections.filter(resource => resource.resource_id === item.resource_id)[0];
+                            match["resource_creation_date"] = match.creation_date;
+                            acc.push(Object.assign(match, item));
+                            return acc;
+                        },
+                        []);
+                return joined;
+            });
+
 
 /**
  * Returns the friendship requests made recently to a user given its id.
@@ -785,7 +870,38 @@ const fetchUserRecentMarkedResources = (userID, timeWindow=TIME_WINDOW) =>
     db.from('marked').
         where('author_id', '=', userID).
         andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
-        orderBy('last_modified');
+        orderBy('last_modified').
+        then(
+            (marked) =>
+            {
+                const selections =
+                    marked.
+                        map(comment => comment.resource_id).
+                        reduce(
+                            (acc, id) =>
+                            {
+                                acc.push(fetchResourceById(id));
+                                return acc;
+                            },
+                            []);
+                return Promise.all([marked, ...selections]);
+            }).
+        then(
+            ([marked, ...selections]) =>
+            {
+                selections.forEach(resource => delete resource.id);
+                const joined =
+                    marked.reduce(
+                        (acc, item) =>
+                        {
+                            const match = selections.filter(resource => resource.resource_id === item.resource_id)[0];
+                            match["resource_creation_date"] = match.creation_date;
+                            acc.push(Object.assign(match, item));
+                            return acc;
+                        },
+                        []);
+                return joined;
+            });
 
 
 /**
@@ -801,8 +917,85 @@ const fetchUserRecentResourcesOnWishlist = (userID, timeWindow=TIME_WINDOW) =>
     db.from('wishlist').
         where('author_id', '=', userID).
         andWhereRaw('DATEDIFF(NOW(), last_modified) < ?', [timeWindow]).
-        orderBy('last_modified');
+        orderBy('last_modified').
+        then(
+            (wishlist) =>
+            {
+                const selections =
+                    wishlist.
+                        map(comment => comment.resource_id).
+                        reduce(
+                            (acc, id) =>
+                            {
+                                acc.push(fetchResourceById(id));
+                                return acc;
+                            },
+                            []);
+                return Promise.all([wishlist, ...selections]);
+            }).
+        then(
+            ([wishlist, ...selections]) =>
+            {
+                selections.forEach(resource => delete resource.id);
+                const joined =
+                    wishlist.reduce(
+                        (acc, item) =>
+                        {
+                            const match = selections.filter(resource => resource.resource_id === item.resource_id)[0];
+                            match["resource_creation_date"] = match.creation_date;
+                            acc.push(Object.assign(match, item));
+                            return acc;
+                        },
+                        []);
+                return joined;
+            });
 
+
+/**
+ * Returns the new resources recently added by a user given its id.
+ *
+ * @param {number} userID
+ * @param {number} timeWindow
+ *
+ * @returns {Promise<array>} Recent new resources sorted by date.
+ */
+const fetchUserRecentNewResources = (userID, timeWindow=TIME_WINDOW) =>
+    db.from('resources').
+        where('author_id', '=', userID).
+        andWhereRaw('DATEDIFF(NOW(), creation_date) < ?', [timeWindow]).
+        orderBy('creation_date').
+        then(
+            (newResources) =>
+            {
+                const selections =
+                    newResources.
+                        map(resource => resource.id).
+                        reduce(
+                            (acc, id) =>
+                            {
+                                acc.push(fetchResourceById(id));
+                                return acc;
+                            },
+                            []);
+                return Promise.all(selections);
+            }).
+        then(
+            (selections) =>
+            {
+                // const joined =
+                //     newResources.reduce(
+                //         (acc, item) =>
+                //         {
+                //             const match = selections.filter(resource => resource.resource_id === item.resource_id)[0];
+                //             match["resource_creation_date"] = match.creation_date;
+                //             acc.push(Object.assign(match, item));
+                //             return acc;
+                //         },
+                //         []);
+                // return joined;
+                selections.forEach(resource => delete resource.id);
+                return selections;
+            });
 
 /**
  * Returns the recent events related to a user given its ID as an array
@@ -839,6 +1032,7 @@ const fetchEventsByUserID = (userID) =>
                 fetchUserRecentRejectedFriendshipsSent(userID),
                 fetchUserRecentMarkedResources(userID),
                 fetchUserRecentResourcesOnWishlist(userID),
+                fetchUserRecentNewResources(userID),
             ]).
         then(
             (
@@ -853,6 +1047,7 @@ const fetchEventsByUserID = (userID) =>
                     rejectedFriendshipsSent,
                     marked,
                     wishlist,
+                    newResources,
                 ]) =>
             {
                 const events =
@@ -868,6 +1063,7 @@ const fetchEventsByUserID = (userID) =>
                             rejectedFriendshipsSent.map(e => Object.assign(e, { 'event': 'rejected_friendship_sent', 'timestamp': e['review_date'] })),
                             marked.map(e => Object.assign(e, { 'event': 'marked', 'timestamp': e['last_modified'] })),
                             wishlist.map(e => Object.assign(e, { 'event': 'wishlist', 'timestamp': e['last_modified'] })),
+                            newResources.map(e => Object.assign(e, { 'event': 'new_resource', 'timestamp': e['creation_date'] })),
                         ).
                         sort((a, b) => a['timestamp'] < b['timestamp'] ? -1 : 1);
                 return events;

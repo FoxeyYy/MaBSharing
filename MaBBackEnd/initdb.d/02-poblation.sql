@@ -34,7 +34,7 @@ VALUES
 INSERT INTO
     resources (id, name, creation_date, release_date, author_id)
 VALUES
-    (1, 'Blade Runnner 2049', '2018-04-07', '2017-10-06', 1),
+    (1, 'Blade Runnner 2049', '2018-04-27', '2017-10-06', 1),
     (2, 'Inception', '2018-04-07', '2010-07-16', 4),
     (3, 'Citizen Ken', '2018-04-07', '1941-09-04', 3),
     (4, 'The Godfather', '2018-04-07', '1972-03-11', 2),
