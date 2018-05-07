@@ -204,10 +204,29 @@ const fetchFriendshipRequests = (userEmail) =>
  *
  * @returns (boolean) True if there is already a friendship request.
  */
+const crossedFriendshipRequest = (origAuthorID, destAuthorID) =>
+    db('friendrequest').
+        select('*').
+        whereNull('accepted').
+        andWhere('orig_author_id', '=', origAuthorID).
+        andWhere('dest_author_id', '=', destAuthorID).
+        then((rows) => (rows.length > 0));
+
+
+/**
+ * Returns whether there is already a friendship request between the
+ * given users.
+ *
+ * @param {number} origAuthorID
+ * @param {number} destAuthorID
+ *
+ * @returns (boolean) True if there is already a friendship request.
+ */
 const existsFriendshipRequest = (origAuthorID, destAuthorID) =>
     db('friendrequest').
         select('*').
-        where('orig_author_id', '=', origAuthorID).
+        whereNull('accepted').
+        andWhere('orig_author_id', '=', origAuthorID).
         andWhere('dest_author_id', '=', destAuthorID).
         then((rows) => (rows.length > 0));
 
@@ -228,20 +247,23 @@ const insertFriendshipRequest = (userEmail, destUserID) =>
                 Promise.all(
                     [
                         user,
-                        existsFriendshipRequest(destUserID, user.id),
+                        crossedFriendshipRequest(destUserID, user.id),
+                        existsFriendshipRequest(user.id, destUserID),
                     ])).
         then(
-            ([user, crossedRequest]) =>
+            ([user, crossedRequest, previousRequest]) =>
                 (crossedRequest) ?
                     Promise.reject('Crossed friendship request') :
-                    db('friendrequest').
-                        insert(
-                            {
-                                creation_date: new Date().toISOString().split('T')[0],
-                                accepted: null,
-                                orig_author_id: user.id,
-                                dest_author_id: destUserID,
-                            })).
+                    (previousRequest) ?
+                        Promise.reject('Previous friendship request') :
+                        db('friendrequest').
+                            insert(
+                                {
+                                    creation_date: new Date().toISOString().split('T')[0],
+                                    accepted: null,
+                                    orig_author_id: user.id,
+                                    dest_author_id: destUserID,
+                                })).
         then(() => destUserID);
 
 
