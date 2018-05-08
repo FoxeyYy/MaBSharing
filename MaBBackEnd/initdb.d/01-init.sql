@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS user (
 --
 
 CREATE TABLE IF NOT EXISTS friendrequest (
-  creation_date DATE NOT NULL,
+  creation_date TIMESTAMP NOT NULL,
   review_date TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   accepted BOOLEAN,
   orig_author_id int(5) NOT NULL,
