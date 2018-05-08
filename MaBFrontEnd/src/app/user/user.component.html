@@ -48,11 +48,11 @@
     </span>
 
     <span *ngIf="event.event === 'accepted_friendship_received' || event.event === 'accepted_friendship_sent'">
-      Is now <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friend
+      Is now <a routerLink="/user/{{event.dest_author_id === user.id ? event.orig_author_id : event.dest_author_id}}">user's {{event.dest_author_id === user.id ? event.orig_author_id : event.dest_author_id}}</a> friend
     </span>
 
     <span *ngIf="event.event === 'rejected_friendship_received' || event.event === 'rejected_friendship_sent'">
-      Refused <a routerLink="/user/{{event.dest_author_id}}">user's {{event.dest_author_id}}</a> friends request
+      Refused <a routerLink="/user/{{event.dest_author_id === user.id ? event.orig_author_id : event.dest_author_id}}">user's {{event.dest_author_id === user.id ? event.orig_author_id : event.dest_author_id}}</a> friends request
     </span>
 
     <span *ngIf="event.event === 'friendship_request_received'">
