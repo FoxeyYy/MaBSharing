@@ -104,16 +104,29 @@ export class ResourceComponent implements OnInit {
       return;
     }
 
-    this.userService.likeResource(this.resource, like).subscribe(
-      result => {
-        if (result < 0) {
-          this.errorMarking = true;
-          return;
-        }
+    if (this.resource.like_it === null) {
+      this.userService.likeResource(this.resource, like).subscribe(
+        result => {
+          if (result < 0) {
+            this.errorMarking = true;
+            return;
+          }
 
-        this.resource.like_it = like;
-      }
-    )
+          this.resource.like_it = like;
+        }
+      );
+    } else {
+      this.userService.updateResourceRating(this.resource, like).subscribe(
+        result => {
+          if (result < 0) {
+            this.errorMarking = true;
+            return;
+          }
+
+          this.resource.like_it = like;
+        }
+      );
+    }
   }
 
   /**

@@ -227,6 +227,18 @@ export class UsersService {
   }
 
   /**
+   * Updates a rating from a resource.
+   * @param resource to like/dislike.
+   * @param like true if liked, false otherwise.
+   */
+  updateResourceRating(resource: Resource, like: boolean): Observable<number> {
+    return this.http.patch<number>(`${this.usersUrl}/ratings/${resource.id}`, { liked: like }).pipe(
+      map(result => result),
+      catchError(error => of(-1))
+    );
+  }
+
+  /**
    * Retrieves an user's events.
    * @param id of the user.
    */
