@@ -24,19 +24,23 @@
   <h5 *ngIf="events.length" class="list-group-item list-group-item-success">{{events.length}} events</h5>
   <div *ngFor="let event of events | reverse" class="list-group-item">
     <span *ngIf="event.event === 'wishlist'">
-      Added <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> to wishlist
+      Added <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a> to wishlist
     </span>
 
     <span *ngIf="event.event === 'marked'">
-      Marked <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> as already seen
+      Marked <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a> as already seen
     </span>
 
     <span *ngIf="event.event === 'rating'">
-      {{event.like_it === '1' ? "Liked" : "Disliked"}} <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+      {{event.like_it === '1' ? "Liked" : "Disliked"}} <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
     </span>
 
     <span *ngIf="event.event === 'comment'">
-      Commented <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+      Commented <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
+    </span>
+
+    <span *ngIf="event.event === 'new_resource'">
+      Created a new {{event.resource_type === 'movie' ? 'movie' : 'book'}} <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
     </span>
 
     <span *ngIf="event.event === 'friendship_request_sent'">

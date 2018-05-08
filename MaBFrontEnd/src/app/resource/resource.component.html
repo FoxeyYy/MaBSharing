@@ -61,7 +61,7 @@
   <h5 *ngIf="comments.length" class="list-group-item list-group-item-success">{{comments.length}} comments</h5>
   <div *ngFor="let comment of comments | reverse" class="list-group-item">
     <small>
-      <a routerLink="/user/{{comment.author_id}}">{{comment.author_id}}</a> on {{comment.creation_date | date}}:
+      <a routerLink="/user/{{comment.author_id}}">User {{comment.author_id}}</a> on {{comment.creation_date | date}}:
     </small>
 
     <div class="comment pl-1 mt-1">{{comment.comment}}</div>

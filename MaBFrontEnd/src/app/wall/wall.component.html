@@ -3,19 +3,23 @@
   <h5 *ngIf="events.length" class="list-group-item list-group-item-success">{{events.length}} events</h5>
   <div *ngFor="let event of events | reverse" class="list-group-item">
     <span *ngIf="event.event === 'wishlist'">
-      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> added <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> to its wishlist
+      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> added <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a> to its wishlist
     </span>
 
     <span *ngIf="event.event === 'marked'">
-      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> marked <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a> as seen
+      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> marked <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a> as seen
     </span>
 
     <span *ngIf="event.event === 'rating'">
-      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> {{event.like_it === '1' ? "liked" : "disliked"}} <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> {{event.like_it === '1' ? "liked" : "disliked"}} <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
     </span>
 
     <span *ngIf="event.event === 'comment'">
-      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> commented <a routerLink="/user/{{event.resource_id}}">{{event.resource_id}}</a>
+      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> commented <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
+    </span>
+
+    <span *ngIf="event.event === 'new_resource'">
+      <a routerLink="/user/{{event.friend_id}}">User {{event.friend_id}}</a> created a new {{event.resource_type === 'movie' ? 'movie' : 'book'}} <a routerLink="/{{event.resource_type === 'movie' ? 'movie' : 'book'}}/{{event.resource_id}}">{{event.name}}</a>
     </span>
 
     <span *ngIf="event.event === 'friendship_request_sent'">
