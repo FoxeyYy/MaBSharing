@@ -77,7 +77,9 @@ const fetchUserById = (userID, userEmail) =>
                                 on(db.raw('friendrequest.orig_author_id = user.id AND friendrequest.dest_author_id = ?', user.id)).
                                 orOn(db.raw('friendrequest.orig_author_id = ? AND friendrequest.dest_author_id = user.id', user.id));
                         }).
-                    where('user.id', userID)).
+                    where('user.id', userID).
+                    orderBy('friendrequest.creation_date', 'desc').
+                    limit(1)).
                     then(
                         (rows) =>
                             rows[0] ?
