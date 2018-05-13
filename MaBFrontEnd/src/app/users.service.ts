@@ -118,7 +118,7 @@ export class UsersService {
    * @param accept true to accept, false to refuse.
    */
   dispatchFriendshipRequest(authorId: number, accept: boolean): Observable<number> {
-    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, { accepted: accept }).pipe(
+    return this.http.patch<number>(`${this.usersUrl}/friendship_requests/${authorId}`, { accepted: String(accept) }).pipe(
       map(response => response["id"]),
       catchError(error => of(-1))
     );

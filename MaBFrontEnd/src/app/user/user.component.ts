@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
       (data: { results: User }) => {
         this.user = data.results;
         this.isCurrentUser = this.userService.getCurrentUserEmail() === this.user.email;
-        this.pendingRequest = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted === null;
+        this.pendingRequest = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted === null && this.user.friendrequest_orig_author_id !== null;
         this.added = this.user.friendrequest_creation_date !== null && this.user.friendrequest_accepted;
 
         this.userService.getUserEvents(this.user.id).subscribe( result => {
